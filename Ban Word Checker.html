@@ -19,8 +19,9 @@ html, body {
   flex-direction: column;
   height: 100%;
   width: 100%;
-  max-width: 700px; /* slightly wider on desktop */
+  max-width: 800px; /* wider container for text areas on desktop */
   margin: 0 auto;
+  padding: 0 10px;
 }
 
 #logo {
@@ -32,20 +33,17 @@ html, body {
 }
 
 textarea {
-  resize: vertical;
-  flex-grow: 1;
   width: 100%;
-  font-size: 5vw;   /* Larger font on mobile */
-  max-font-size: 18px;
-  padding: 14px;
-  border-radius: 6px;
+  font-size: 14px;  /* slightly smaller font */
+  min-height: 140px;
+  max-height: 220px;
+  padding: 12px;
+  border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  margin-bottom: 15px;
-  min-height: 140px;
-  max-height: 240px;
-  overflow-y: auto;
+  margin-bottom: 12px;
   font-family: inherit;
+  overflow-y: auto;
 }
 
 button {
@@ -80,21 +78,18 @@ h4 {
 }
 
 #output {
-  flex-shrink: 0;
-  min-height: 50px;
-  max-height: 120px;
   width: 100%;
-  padding: 12px;
-  box-sizing: border-box;
+  font-size: 13px; /* slightly smaller font */
+  min-height: 40px;
+  max-height: 100px;
+  padding: 10px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
   background-color: #f9f9f9;
-  white-space: pre-wrap;
-  overflow-y: auto;
-  font-size: 5vw;
-  max-font-size: 18px;
-  border-radius: 6px;
+  border-radius: 4px;
   font-family: inherit;
   color: #222;
+  overflow-y: auto;
 }
 
 #loading {
@@ -109,18 +104,18 @@ h4 {
 }
 
 #highlightedText {
-  white-space: pre-wrap;
-  padding: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #f9f9f9;
+  width: 100%; 
+  font-size: 14px; /* smaller font for highlight text */
   min-height: 140px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  background: #f9f9f9;
+  border-radius: 4px;
+  overflow-y: auto;
   font-family: inherit;
   color: #222;
-  overflow-y: auto;
-  font-size: 5vw;
-  max-font-size: 18px;
 }
 
 .highlight {
