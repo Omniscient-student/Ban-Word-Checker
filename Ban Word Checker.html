@@ -57,13 +57,11 @@ button {
   cursor: pointer;
   border-radius: 5px;
   margin-bottom: 15px;
-  font-size: 4vw;
-  max-font-size: 8px;
+  font-size: 14px;  /* reasonable default size */
   transition: background-color 0.3s ease;
   flex-shrink: 0;
   outline-offset: 2px;
 }
-
 button:hover,
 button:focus {
   background-color: #287bce;
@@ -74,8 +72,7 @@ button:focus {
 h4 {
   margin: 0 0 6px 0;
   flex-shrink: 0;
-  font-size: 4.5vw;
-  max-font-size: 8px;
+  font-size: 16px;  /* readable headline size */
 }
 
 #output {
@@ -89,8 +86,7 @@ h4 {
   background-color: #f9f9f9;
   white-space: pre-wrap;
   overflow-y: auto;
-  font-size: 4vw;
-  max-font-size: 16px;
+  font-size: 14px;  /* consistent body text size */
   border-radius: 4px;
   font-family: inherit;
   color: #222;
@@ -102,8 +98,7 @@ h4 {
   color: #666;
   margin-bottom: 10px;
   font-style: italic;
-  font-size: 3.5vw;
-  max-font-size: 14px;
+  font-size: 13px;
   flex-shrink: 0;
 }
 
@@ -118,8 +113,7 @@ h4 {
   font-family: inherit;
   color: #222;
   overflow-y: auto;
-  font-size: 4vw;
-  max-font-size: 16px;
+  font-size: 14px;
 }
 
 .highlight {
@@ -130,20 +124,20 @@ h4 {
   padding: 0 2px;
 }
 
-/* Media query for very narrow mobile screens */
-@media (max-width: 350px) {
-  #logo {
-    width: 50vw;
-    min-width: 100px;
-    max-width: 150px;
-    margin-bottom: 10px;
-  }
-  textarea, button, h4, #output, #loading, #highlightedText {
-    font-size: 5vw;
-    max-font-size: 10px;
-  }
+/* Responsive font size adjustments for smaller screens */
+@media (max-width: 400px) {
   button {
-    padding: 5px 10px;
+    font-size: 12px;
+    padding: 8px 20px;
+  }
+  h4 {
+    font-size: 14px;
+  }
+  #output, #highlightedText {
+    font-size: 13px;
+  }
+  #loading {
+    font-size: 11px;
   }
 }
   </style>
