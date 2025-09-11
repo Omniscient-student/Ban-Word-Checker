@@ -4,7 +4,7 @@
   <base target="_top">
   <style>
 html, body {
-  margin: 0; 
+  margin: 0;
   padding: 10px;
   height: 100%;
   width: 100%;
@@ -19,13 +19,15 @@ html, body {
   flex-direction: column;
   height: 100%;
   width: 100%;
-  max-width: 600px;  /* Limit max width for desktop */
-  margin: 0 auto;    /* Center horizontally on desktop... */
+  max-width: 600px; /* limit max width on desktop */
+  margin: 0 auto;
 }
 
 #logo {
-  width: 100px;        /* Smaller logo */
-  margin: 0 auto 12px;
+  width: 40vw;     /* use viewport width units for scalable size */
+  max-width: 180px; /* cap max width */
+  min-width: 120px; /* minimum size so it doesn't get too small */
+  margin: 0 auto 15px;
   flex-shrink: 0;
 }
 
@@ -33,14 +35,15 @@ textarea {
   resize: vertical;
   flex-grow: 1;
   width: 100%;
-  font-size: 13px;     /* Slightly smaller font */
-  padding: 8px;        /* Less padding */
+  font-size: 4vw;    /* responsive font size relative to viewport */
+  max-font-size: 16px;
+  padding: 10px;
   border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  margin-bottom: 8px;
-  min-height: 100px;   /* Smaller min height */
-  max-height: 160px;   /* Smaller max height for mobile */
+  margin-bottom: 10px;
+  min-height: 100px;
+  max-height: 180px;
   overflow-y: auto;
   font-family: inherit;
 }
@@ -51,34 +54,44 @@ button {
   border: none;
   color: white;
   font-weight: bold;
-  padding: 8px 20px;    /* Slightly smaller padding */
+  padding: 10px 24px;
   cursor: pointer;
   border-radius: 5px;
-  margin-bottom: 12px;
-  font-size: 14px;      /* Slightly smaller font */
+  margin-bottom: 15px;
+  font-size: 4vw;
+  max-font-size: 16px;
   transition: background-color 0.3s ease;
   flex-shrink: 0;
   outline-offset: 2px;
 }
 
+button:hover,
+button:focus {
+  background-color: #287bce;
+  outline: none;
+  box-shadow: 0 0 5px #287bce;
+}
+
 h4 {
   margin: 0 0 6px 0;
   flex-shrink: 0;
-  font-size: 16px;
+  font-size: 4.5vw;
+  max-font-size: 18px;
 }
 
 #output {
   flex-shrink: 0;
-  min-height: 30px;      /* Reduced height for mobile */
-  max-height: 80px;
+  min-height: 40px;
+  max-height: 100px;
   width: 100%;
-  padding: 6px;
+  padding: 8px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
   white-space: pre-wrap;
   overflow-y: auto;
-  font-size: 13px;
+  font-size: 4vw;
+  max-font-size: 16px;
   border-radius: 4px;
   font-family: inherit;
   color: #222;
@@ -90,13 +103,14 @@ h4 {
   color: #666;
   margin-bottom: 10px;
   font-style: italic;
-  font-size: 12px;
+  font-size: 3.5vw;
+  max-font-size: 14px;
   flex-shrink: 0;
 }
 
 #highlightedText {
   white-space: pre-wrap;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   background: #f9f9f9;
@@ -105,7 +119,8 @@ h4 {
   font-family: inherit;
   color: #222;
   overflow-y: auto;
-  font-size: 14px;
+  font-size: 4vw;
+  max-font-size: 16px;
 }
 
 .highlight {
@@ -116,25 +131,20 @@ h4 {
   padding: 0 2px;
 }
 
-/* Responsive tweaks for very small mobile screens */
-@media (max-width: 400px) {
-  textarea {
-    font-size: 12px;
-    min-height: 80px;
-    max-height: 140px;
+/* Media query for very narrow mobile screens */
+@media (max-width: 350px) {
+  #logo {
+    width: 50vw;
+    min-width: 100px;
+    max-width: 150px;
+    margin-bottom: 10px;
+  }
+  textarea, button, h4, #output, #loading, #highlightedText {
+    font-size: 5vw;
+    max-font-size: 14px;
   }
   button {
-    padding: 6px 16px;
-    font-size: 13px;
-  }
-  #output {
-    font-size: 12px;
-    min-height: 25px;
-    max-height: 70px;
-  }
-  #highlightedText {
-    min-height: 80px;
-    font-size: 13px;
+    padding: 8px 16px;
   }
 }
   </style>
