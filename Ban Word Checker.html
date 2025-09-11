@@ -5,7 +5,7 @@
   <style>
 html, body {
   margin: 0;
-  padding: 10px;
+  padding: 12px;
   height: 100%;
   width: 100%;
   font-family: Arial, sans-serif;
@@ -19,15 +19,15 @@ html, body {
   flex-direction: column;
   height: 100%;
   width: 100%;
-  max-width: 600px; /* limit max width on desktop */
+  max-width: 700px; /* slightly wider on desktop */
   margin: 0 auto;
 }
 
 #logo {
-  width: 40vw;     /* use viewport width units for scalable size */
-  max-width: 180px; /* cap max width */
-  min-width: 120px; /* minimum size so it doesn't get too small */
-  margin: 0 auto 15px;
+  width: 50vw;      /* Bigger logo */
+  max-width: 250px; /* Cap max size */
+  min-width: 150px; /* Minimum size */
+  margin: 0 auto 20px;
   flex-shrink: 0;
 }
 
@@ -35,15 +35,15 @@ textarea {
   resize: vertical;
   flex-grow: 1;
   width: 100%;
-  font-size: 4vw;    /* responsive font size relative to viewport */
-  max-font-size: 16px;
-  padding: 10px;
-  border-radius: 4px;
+  font-size: 5vw;   /* Larger font on mobile */
+  max-font-size: 18px;
+  padding: 14px;
+  border-radius: 6px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  margin-bottom: 10px;
-  min-height: 100px;
-  max-height: 180px;
+  margin-bottom: 15px;
+  min-height: 140px;
+  max-height: 240px;
   overflow-y: auto;
   font-family: inherit;
 }
@@ -54,45 +54,45 @@ button {
   border: none;
   color: white;
   font-weight: bold;
-  padding: 10px 24px;
+  padding: 14px 28px; /* Bigger button */
   cursor: pointer;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  font-size: 4vw;
-  max-font-size: 16px;
+  border-radius: 7px;
+  margin-bottom: 20px;
+  font-size: 5vw;
+  max-font-size: 18px;
   transition: background-color 0.3s ease;
   flex-shrink: 0;
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 button:hover,
 button:focus {
   background-color: #287bce;
   outline: none;
-  box-shadow: 0 0 5px #287bce;
+  box-shadow: 0 0 7px #287bce;
 }
 
 h4 {
-  margin: 0 0 6px 0;
+  margin: 0 0 8px 0;
   flex-shrink: 0;
-  font-size: 4.5vw;
-  max-font-size: 18px;
+  font-size: 5.5vw;
+  max-font-size: 20px;
 }
 
 #output {
   flex-shrink: 0;
-  min-height: 40px;
-  max-height: 100px;
+  min-height: 50px;
+  max-height: 120px;
   width: 100%;
-  padding: 8px;
+  padding: 12px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
   white-space: pre-wrap;
   overflow-y: auto;
-  font-size: 4vw;
-  max-font-size: 16px;
-  border-radius: 4px;
+  font-size: 5vw;
+  max-font-size: 18px;
+  border-radius: 6px;
   font-family: inherit;
   color: #222;
 }
@@ -101,50 +101,57 @@ h4 {
   display: none;
   text-align: center;
   color: #666;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-style: italic;
-  font-size: 3.5vw;
-  max-font-size: 14px;
+  font-size: 4vw;
+  max-font-size: 15px;
   flex-shrink: 0;
 }
 
 #highlightedText {
   white-space: pre-wrap;
-  padding: 10px;
+  padding: 14px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   background: #f9f9f9;
-  min-height: 100px;
-  margin-bottom: 10px;
+  min-height: 140px;
+  margin-bottom: 15px;
   font-family: inherit;
   color: #222;
   overflow-y: auto;
-  font-size: 4vw;
-  max-font-size: 16px;
+  font-size: 5vw;
+  max-font-size: 18px;
 }
 
 .highlight {
   background-color: #ffea00;
   color: #b70000;
   font-weight: bold;
-  border-radius: 3px;
-  padding: 0 2px;
+  border-radius: 4px;
+  padding: 0 3px;
 }
 
-/* Media query for very narrow mobile screens */
+/* Responsive tweaks for very small mobile screens */
 @media (max-width: 350px) {
   #logo {
-    width: 50vw;
-    min-width: 100px;
-    max-width: 150px;
-    margin-bottom: 10px;
+    width: 70vw;
+    min-width: 120px;
+    max-width: 220px;
+    margin-bottom: 15px;
   }
   textarea, button, h4, #output, #loading, #highlightedText {
-    font-size: 5vw;
-    max-font-size: 14px;
+    font-size: 6.5vw;
+    max-font-size: 16px;
   }
   button {
-    padding: 8px 16px;
+    padding: 12px 24px;
+  }
+  #output {
+    min-height: 45px;
+    max-height: 100px;
+  }
+  #highlightedText {
+    min-height: 120px;
   }
 }
   </style>
