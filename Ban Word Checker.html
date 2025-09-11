@@ -3,110 +3,140 @@
 <head>
   <base target="_top">
   <style>
-    html, body {
-      margin: 0; padding: 10px;
-      height: 100%;
-      width: 100%;
-      font-family: Arial, sans-serif;
-      box-sizing: border-box;
-      background-color: #fff;
-      color: #333;
-    }
-    #container {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      width: 100%;
-    }
-    #logo {
-      width: 120px;
-      margin: 0 auto 15px auto;
-      flex-shrink: 0;
-    }
-    textarea {
-      resize: vertical;
-      flex-grow: 1;
-      width: 100%;
-      font-size: 14px;
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-      min-height: 120px;
-      max-height: 200px;
-      overflow-y: auto;
-      font-family: inherit;
-    }
-    button {
-      align-self: center;
-      background-color: #3399ff;
-      border: none;
-      color: white;
-      font-weight: bold;
-      padding: 10px 24px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-bottom: 15px;
-      font-size: 15px;
-      transition: background-color 0.3s ease;
-      flex-shrink: 0;
-      outline-offset: 2px;
-    }
-    button:hover,
-    button:focus {
-      background-color: #287bce;
-      outline: none;
-      box-shadow: 0 0 5px #287bce;
-    }
-    h4 {
-      margin: 0 0 6px 0;
-      flex-shrink: 0;
-    }
-    #output {
-      flex-shrink: 0;
-      min-height: 40px;
-      max-height: 100px;
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      background-color: #f9f9f9;
-      white-space: pre-wrap;
-      overflow-y: auto;
-      font-size: 14px;
-      border-radius: 4px;
-      font-family: inherit;
-      color: #222;
-    }
-    #loading {
-      display: none;
-      text-align: center;
-      color: #666;
-      margin-bottom: 10px;
-      font-style: italic;
-      font-size: 13px;
-      flex-shrink: 0;
-    }
-    #highlightedText {
-      white-space: pre-wrap;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      background: #f9f9f9;
-      min-height: 120px;
-      margin-bottom: 10px;
-      font-family: inherit;
-      color: #222;
-      overflow-y: auto;
-    }
-    .highlight {
-      background-color: #ffea00;
-      color: #b70000;
-      font-weight: bold;
-      border-radius: 3px;
-      padding: 0 2px;
-    }
+html, body {
+  margin: 0; 
+  padding: 10px;
+  height: 100%;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: #333;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: 600px;  /* Limit max width for desktop */
+  margin: 0 auto;    /* Center horizontally on desktop */
+}
+
+#logo {
+  width: 100px;        /* Smaller logo */
+  margin: 0 auto 12px;
+  flex-shrink: 0;
+}
+
+textarea {
+  resize: vertical;
+  flex-grow: 1;
+  width: 100%;
+  font-size: 13px;     /* Slightly smaller font */
+  padding: 8px;        /* Less padding */
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  min-height: 100px;   /* Smaller min height */
+  max-height: 160px;   /* Smaller max height for mobile */
+  overflow-y: auto;
+  font-family: inherit;
+}
+
+button {
+  align-self: center;
+  background-color: #3399ff;
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 8px 20px;    /* Slightly smaller padding */
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 12px;
+  font-size: 14px;      /* Slightly smaller font */
+  transition: background-color 0.3s ease;
+  flex-shrink: 0;
+  outline-offset: 2px;
+}
+
+h4 {
+  margin: 0 0 6px 0;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+#output {
+  flex-shrink: 0;
+  min-height: 30px;      /* Reduced height for mobile */
+  max-height: 80px;
+  width: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  font-size: 13px;
+  border-radius: 4px;
+  font-family: inherit;
+  color: #222;
+}
+
+#loading {
+  display: none;
+  text-align: center;
+  color: #666;
+  margin-bottom: 10px;
+  font-style: italic;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+#highlightedText {
+  white-space: pre-wrap;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #f9f9f9;
+  min-height: 100px;
+  margin-bottom: 10px;
+  font-family: inherit;
+  color: #222;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.highlight {
+  background-color: #ffea00;
+  color: #b70000;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* Responsive tweaks for very small mobile screens */
+@media (max-width: 400px) {
+  textarea {
+    font-size: 12px;
+    min-height: 80px;
+    max-height: 140px;
+  }
+  button {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+  #output {
+    font-size: 12px;
+    min-height: 25px;
+    max-height: 70px;
+  }
+  #highlightedText {
+    min-height: 80px;
+    font-size: 13px;
+  }
+}
   </style>
 </head>
 <body>
