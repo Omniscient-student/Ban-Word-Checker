@@ -157,13 +157,13 @@ h4 {
   }
 }
   </style>
-</head>
 <body>
   <div id="container" role="main">
     <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Brainly_logo.svg/1920px-Brainly_logo.svg.png" alt="Brainly Logo">
     <textarea id="inputText" placeholder="Paste paragraph here..." aria-label="Input paragraph to check for banned words"></textarea>
     <div id="highlightedText" aria-live="polite" aria-atomic="true"></div>
     <button id="checkBtn" onclick="checkBanWords()" aria-label="Check banned words in the paragraph">Check Banned Words</button>
+    <button onclick="resetFields()" aria-label="Reset input and output">Reset</button>
     <div id="loading" aria-live="polite" role="status">Checking...</div>
     <h4>Detected Words:</h4>
     <div id="output" aria-live="polite" aria-atomic="true"></div>
@@ -1584,7 +1584,12 @@ h4 {
       result += escapeHTML(text.substring(lastIndex));
       highlightedDiv.innerHTML = result;
     }
+
+    function resetFields() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('output').textContent = '';
+      document.getElementById('highlightedText').innerHTML = '';
+    }
   </script>
 </body>
 </html>
-
