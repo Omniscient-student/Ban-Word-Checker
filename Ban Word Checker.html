@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <base target="_top">
   <style>
 html, body {
-  margin: 0;
+  margin: 0; 
   padding: 10px;
   height: 100%;
   width: 100%;
@@ -19,15 +20,15 @@ html, body {
   flex-direction: column;
   height: 100%;
   width: 100%;
-  max-width: 700px; /* slightly wider on desktop */
-  margin: 0 auto;
+  max-width: 600px;  /* Limit max width for desktop */
+  margin: 0 auto;    /* Center horizontally on desktop */
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 #logo {
-  width: 40vw;     /* use viewport width units for scalable size */
-  max-width: 100px; /* cap max width */
-  min-width: 200px; /* minimum size so it doesn't get too small */
-  margin: 0 auto 15px;
+  width: 100px;
+  margin: 0 auto 12px;
   flex-shrink: 0;
 }
 
@@ -35,14 +36,14 @@ textarea {
   resize: vertical;
   flex-grow: 1;
   width: 100%;
-  font-size: 16px;       /* larger readable font */
-  padding: 14px;         /* more padding for comfort */
+  font-size: 13px;
+  padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  margin-bottom: 10px;
-  min-height: 180px;     /* bigger minimum height */
-  max-height: 280px;     /* bigger max height */
+  margin-bottom: 8px;
+  min-height: 100px;
+  max-height: 160px;
   overflow-y: auto;
   font-family: inherit;
 }
@@ -53,40 +54,39 @@ button {
   border: none;
   color: white;
   font-weight: bold;
-  padding: 10px 24px;
+  padding: 8px 20px;
   cursor: pointer;
   border-radius: 5px;
-  margin-bottom: 15px;
-  font-size: 14px;  /* reasonable default size */
-  transition: background-color 0.3s ease;
+  margin-bottom: 12px;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   flex-shrink: 0;
   outline-offset: 2px;
 }
-button:hover,
-button:focus {
-  background-color: #287bce;
-  outline: none;
-  box-shadow: 0 0 5px #287bce;
+
+button:hover, button:focus {
+  background-color: #267acc;
+  transform: scale(1.05);
 }
 
 h4 {
   margin: 0 0 6px 0;
   flex-shrink: 0;
-  font-size: 16px;  /* readable headline size */
+  font-size: 16px;
 }
 
 #output {
   flex-shrink: 0;
-  min-height: 40px;
-  max-height: 100px;
+  min-height: 30px;
+  max-height: 80px;
   width: 100%;
-  padding: 8px;
+  padding: 6px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
   white-space: pre-wrap;
   overflow-y: auto;
-  font-size: 14px;  /* consistent body text size */
+  font-size: 13px;
   border-radius: 4px;
   font-family: inherit;
   color: #222;
@@ -98,13 +98,13 @@ h4 {
   color: #666;
   margin-bottom: 10px;
   font-style: italic;
-  font-size: 13px;
+  font-size: 12px;
   flex-shrink: 0;
 }
 
 #highlightedText {
   white-space: pre-wrap;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
   background: #f9f9f9;
@@ -122,22 +122,38 @@ h4 {
   font-weight: bold;
   border-radius: 3px;
   padding: 0 2px;
+  transition: background-color 0.5s ease;
+  animation: highlightPulse 1s ease forwards;
 }
 
-/* Responsive font size adjustments for smaller screens */
+@keyframes highlightPulse {
+  0% { background-color: #ffea00; }
+  50% { background-color: #fff176; }
+  100% { background-color: #ffea00; }
+}
+
+/* Responsive tweaks for very small mobile screens */
 @media (max-width: 400px) {
+  #container {
+    padding: 8px;
+  }
+  textarea {
+    font-size: 14px;
+    min-height: 100px;
+    max-height: 200px;
+  }
   button {
-    font-size: 5px;
-    padding: 8px 20px;
+    font-size: 14px;
+    padding: 8px 14px;
   }
-  h4 {
-    font-size: 5px;
+  #output {
+    font-size: 13px;
+    min-height: 35px;
+    max-height: 90px;
   }
-  #output, #highlightedText {
-    font-size: 5px;
-  }
-  #loading {
-    font-size: 5px;
+  #highlightedText {
+    font-size: 14px;
+    min-height: 100px;
   }
 }
   </style>
@@ -1571,3 +1587,4 @@ h4 {
   </script>
 </body>
 </html>
+
