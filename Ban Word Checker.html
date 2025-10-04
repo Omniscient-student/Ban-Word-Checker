@@ -6,6 +6,7 @@
   <style>
 html, body {
   margin: 0; 
+  background: linear-gradient(to bottom right, #f5f7fa, #c3cfe2);
   padding: 10px;
   height: 100%;
   width: 100%;
@@ -160,13 +161,12 @@ h4 {
 <body>
   <div id="container" role="main">
     <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Brainly_logo.svg/1920px-Brainly_logo.svg.png" alt="Brainly Logo">
-    <textarea id="inputText" placeholder="Paste paragraph here..." aria-label="Input paragraph to check for banned words"></textarea>
+    <textarea id="inputText" placeholder="Type or paste your text here..." aria-label="Input paragraph to check for banned words"></textarea>
     <div id="highlightedText" aria-live="polite" aria-atomic="true"></div>
     <button id="checkBtn" onclick="checkBanWords()" aria-label="Check banned words in the paragraph">Check Banned Words</button>
     <button onclick="resetFields()" aria-label="Reset input and output">Reset</button>
     <div id="loading" aria-live="polite" role="status">Checking...</div>
-    <h4>Detected Words:</h4>
-    <div id="output" aria-live="polite" aria-atomic="true"></div>
+    <div id="output" aria-live="polite">Detected words will appear here.</div>
   </div>
   <script>
     const bannedWords = [
@@ -1544,7 +1544,6 @@ h4 {
       output.textContent = '';
       highlightedDiv.innerHTML = '';
 
-      // Create regex pattern without word boundaries to detect banned words in any part of input
       const escapedWords = bannedWords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
       const pattern = escapedWords.join('|');
       const regex = new RegExp(pattern, 'gi');
@@ -1557,7 +1556,6 @@ h4 {
           index: match.index,
           length: match[0].length
         });
-        // Prevent infinite loop for zero-length matches
         if (match.index === regex.lastIndex) regex.lastIndex++;
       }
 
@@ -1565,13 +1563,15 @@ h4 {
       btn.disabled = false;
 
       if (highlights.length === 0) {
-        output.textContent = "No banned words detected.";
-        highlightedDiv.textContent = text;
+          output.textContent = "✅ No banned words found!";
+          output.style.color = "#5cb85c";
+          highlightedDiv.textContent = text;
         return;
       }
 
       const uniqueWords = [...new Set(highlights.map(h => h.word.toLowerCase()))];
-      output.textContent = uniqueWords.join(', ');
+      output.innerHTML = "⚠️ Banned words found: <strong>" + uniqueWords.join(", ") + "</strong>";
+      output.style.color = "#d9534f";
 
       let result = '';
       let lastIndex = 0;
@@ -1587,7 +1587,8 @@ h4 {
 
     function resetFields() {
       document.getElementById('inputText').value = '';
-      document.getElementById('output').textContent = '';
+      document.getElementById('output').innerHTML = "Detected words will appear here.";
+      document.getElementById('output').style.color = "#333";
       document.getElementById('highlightedText').innerHTML = '';
     }
   </script>
