@@ -1,1558 +1,398 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <base target="_top">
+  <title>Brainly Ban Word Checker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-html, body {
-  background-color: #f8f9fa; /* Light gray background */
-  font-family: 'Poppins', Arial, sans-serif; /* Optional modern font */
-  margin: 0;
-  padding: 10px;
-  height: 100%;
-  width: 100%;
-  color: #333;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
+    :root {
+      --primary-blue: #3399ff;
+      --primary-blue-dark: #267acc;
+      --success-green: #5cb85c;
+      --error-red: #d9534f;
+      --warning-yellow: #ffea00;
+      --text-color: #333;
+      --light-gray: #f8f9fa;
+      --border-color: #dee2e6;
+      --shadow-light: rgba(0, 0, 0, 0.08);
+      --font-family: 'Poppins', sans-serif;
+    }
 
-#container {
-  background-color: #fff; /* White container */
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1); /* subtle shadow */
-  border-radius: 10px;
-  padding: 20px 25px 25px;
-  max-width: 600px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-}
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: var(--font-family);
+      box-sizing: border-box;
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* Align to top for better scrolling on smaller screens */
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-#heading {
-  font-family: 'Poppins', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 1.8em;
-  color: #3399ff; /* Primary blue */
-  text-align: center;
-  margin-bottom: 20px;
-}
+    #app-container {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px var(--shadow-light);
+      padding: 30px;
+      max-width: 700px; /* Increased max width */
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      box-sizing: border-box;
+      animation: fadeIn 0.8s ease-out;
+      margin-top: 20px; /* Add some margin from the top */
+    }
 
-#logo {
-  width: 100px;
-  margin: 0 auto 12px;
-  flex-shrink: 0;
-}
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-textarea {
-  resize: vertical;
-  flex-grow: 1;
-  width: 100%;
-  font-size: 13px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  margin-bottom: 8px;
-  min-height: 100px;
-  max-height: 160px;
-  overflow-y: auto;
-  font-family: inherit;
-}
+    #header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-/* Check button: medium width */
-button#checkBtn {
-  align-self: center;
-  min-width: 140px;
-  max-width: 180px;
-  width: 100%;
-  background-color: #3399ff;
-  color: white;
-  font-weight: bold;
-  padding: 8px 0;
-  border-radius: 5px;
-  margin-bottom: 12px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  outline-offset: 2px;
-  text-align: center;
-}
+    #logo {
+      width: 120px;
+      margin-bottom: 15px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-/* Reset button: smaller width */
-button#resetBtn {
-  align-self: center;
-  min-width: 90px;
-  max-width: 120px;
-  width: 100%;
-  background-color: #6c757d;
-  color: white;
-  font-weight: bold;
-  padding: 8px 0;
-  border-radius: 5px;
-  margin-bottom: 12px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  outline-offset: 2px;
-  text-align: center;
-}
+    h1 {
+      font-size: 1.8em;
+      color: var(--primary-blue);
+      margin: 0;
+      font-weight: 700;
+    }
 
-button#checkBtn:hover,
-button#checkBtn:focus {
-  background-color: #267acc;
-  transform: scale(1.05);
-}
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-button#resetBtn:hover,
-button#resetBtn:focus {
-  background-color: #5a6268;
-  transform: scale(1.05);
-}
+    label {
+      font-size: 0.9em;
+      font-weight: 600;
+      color: #555;
+    }
 
-#output {
-  flex-shrink: 0;
-  min-height: 30px;
-  max-height: 80px;
-  width: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  white-space: pre-wrap;
-  overflow-y: auto;
-  font-size: 13px;
-  border-radius: 4px;
-  font-family: inherit;
-  color: #222;
-}
+    textarea {
+      min-height: 150px; /* Increased min-height */
+      max-height: 300px; /* Increased max-height */
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-size: 1em;
+      font-family: var(--font-family);
+      resize: vertical;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box;
+    }
 
-#loading {
-  display: none;
-  text-align: center;
-  color: #666;
-  margin-bottom: 10px;
-  font-style: italic;
-  font-size: 12px;
-  flex-shrink: 0;
-}
+    textarea:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.2);
+      outline: none;
+    }
 
-#highlightedText {
-  white-space: pre-wrap;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #f9f9f9;
-  min-height: 100px;
-  margin-bottom: 10px;
-  font-family: inherit;
-  color: #222;
-  overflow-y: auto;
-  font-size: 14px;
-}
+    .char-count {
+      font-size: 0.85em;
+      color: #777;
+      text-align: right;
+    }
 
-.highlight {
-  background-color: #ffea00;
-  color: #b70000;
-  font-weight: bold;
-  border-radius: 3px;
-  padding: 0 2px;
-  transition: background-color 0.5s ease;
-  animation: highlightPulse 1s ease forwards;
-}
+    .button-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+    }
 
-@keyframes highlightPulse {
-  0% { background-color: #ffea00; }
-  50% { background-color: #fff176; }
-  100% { background-color: #ffea00; }
-}
+    button {
+      background-color: var(--primary-blue);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 10px 22px;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      flex-grow: 1; /* Allow buttons to grow */
+      max-width: 200px; /* Limit individual button width */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-/* Responsive tweaks for very small mobile screens */
-@media (max-width: 400px) {
-  #container {
-    padding: 8px;
-  }
-  textarea {
-    font-size: 14px;
-    min-height: 100px;
-    max-height: 200px;
-  }
-  button {
-    font-size: 14px;
-    padding: 8px 14px;
-  }
-  #output {
-    font-size: 13px;
-    min-height: 35px;
-    max-height: 90px;
-  }
-  #highlightedText {
-    font-size: 14px;
-    min-height: 100px;
-  }
-}
+    button:hover:not(:disabled), button:focus:not(:disabled) {
+      background-color: var(--primary-blue-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      outline: none;
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      opacity: 0.7;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+    }
+    .btn-secondary:hover:not(:disabled) {
+        background-color: #5a6268;
+    }
+
+    #status-message {
+      min-height: 30px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      font-weight: 600;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #status-message.success {
+      background-color: #d4edda;
+      color: var(--success-green);
+      border: 1px solid #c3e6cb;
+    }
+
+    #status-message.error {
+      background-color: #f8d7da;
+      color: var(--error-red);
+      border: 1px solid #f5c6cb;
+    }
+
+    #status-message.info {
+      background-color: #e2e3e5;
+      color: #6c757d;
+      border: 1px solid #d6d8db;
+    }
+
+    #loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #666;
+      font-style: italic;
+      font-size: 0.9em;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+
+    .loader {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary-blue);
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #highlighted-section {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: #fdfdfd;
+      padding: 15px;
+      min-height: 120px;
+      max-height: 350px;
+      overflow-y: auto;
+      font-size: 1em;
+      line-height: 1.6;
+      color: #222;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+
+    #highlighted-text {
+      white-space: pre-wrap;
+      word-wrap: break-word; /* Ensure long words break */
+    }
+
+    .highlight {
+      background-color: var(--warning-yellow);
+      color: var(--error-red);
+      font-weight: 600;
+      border-radius: 4px;
+      padding: 1px 3px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: inline-block; /* Ensure padding works correctly */
+      box-shadow: 0 0 5px rgba(255, 234, 0, 0.5); /* Subtle glowing effect */
+    }
+
+    .highlight-icon {
+      margin-left: 5px;
+      color: var(--error-red);
+      font-weight: 700;
+      font-size: 0.9em;
+    }
+
+    #action-buttons-after-check {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end; /* Align to the right */
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    #action-buttons-after-check button {
+        flex-grow: 0; /* Don't let these buttons grow too much */
+        max-width: fit-content;
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #app-container {
+        padding: 20px;
+        margin-top: 10px;
+      }
+      h1 {
+        font-size: 1.5em;
+      }
+      button {
+        padding: 10px 18px;
+        font-size: 0.95em;
+      }
+      .button-group, #action-buttons-after-check {
+          flex-direction: column;
+          align-items: stretch;
+      }
+      button, #action-buttons-after-check button {
+          max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+        align-items: stretch; /* Stretch to fill width on very small screens */
+      }
+      #app-container {
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px var(--shadow-light);
+      }
+      #logo {
+        width: 100px;
+      }
+      h1 {
+        font-size: 1.3em;
+      }
+      textarea {
+        min-height: 120px;
+        font-size: 0.95em;
+        padding: 10px;
+      }
+      #status-message, #highlighted-section {
+        font-size: 0.9em;
+        padding: 10px;
+      }
+    }
   </style>
+</head>
 <body>
-  <div id="container" role="main">
-    <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Brainly_logo.svg/1920px-Brainly_logo.svg.png" alt="Brainly Logo">
-    <h1 id="heading">Ban Word Checker</h1>
-    <textarea id="inputText" placeholder="Type or paste your text here..." aria-label="Input paragraph to check for banned words"></textarea>
-    <button id="checkBtn" onclick="checkBanWords()" aria-label="Check banned words in the paragraph">Check Banned Words</button>
-    <button id="resetBtn" class="btn-gray" onclick="resetFields()" aria-label="Reset input and output">Reset</button>
-    <div id="output" aria-live="polite">Detected words will appear here.</div>
-    <div id="highlightedText" aria-live="polite" aria-atomic="true"></div>
-    <div id="loading" aria-live="polite" role="status">Checking...</div>
+  <div id="app-container" role="main">
+    <header id="header">
+      <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Brainly_logo.svg/1920px-Brainly_logo.svg.png" alt="Brainly Logo">
+      <h1>Ban Word Checker</h1>
+    </header>
+
+    <main>
+      <div class="form-group">
+        <label for="input-text">Enter your text to check for banned words:</label>
+        <textarea 
+          id="input-text" 
+          placeholder="Type or paste your text here..." 
+          aria-label="Input paragraph to check for banned words"
+          maxlength="10000">
+        </textarea>
+        <div class="char-count">
+          <span id="char-counter">0</span>/10000 characters
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button id="check-btn" onclick="checkBanWords()" aria-label="Check banned words in the paragraph">
+          Check Banned Words
+        </button>
+        <button id="reset-btn" class="btn-secondary" onclick="resetFields()" aria-label="Reset input and output">
+          Reset
+        </button>
+      </div>
+
+      <div id="loading" style="display: none;" aria-live="polite" role="status">
+        <div class="loader"></div>
+        <span>Checking for banned words...</span>
+      </div>
+
+      <div id="status-message" class="info" aria-live="polite">
+        Enter text above and click "Check Banned Words" to get started.
+      </div>
+
+      <div id="highlighted-section" style="display: none;">
+        <h3 style="margin-top: 0; color: var(--primary-blue); font-size: 1.1em;">
+          Text with Highlighted Banned Words:
+        </h3>
+        <div id="highlighted-text" aria-live="polite" aria-atomic="true"></div>
+        
+        <div id="action-buttons-after-check" style="display: none;">
+          <button onclick="copyCleanText()" class="btn-secondary">
+            Copy Clean Text
+          </button>
+          <button onclick="copyHighlightedText()" class="btn-secondary">
+            Copy with Highlights
+          </button>
+        </div>
+      </div>
+    </main>
   </div>
+
   <script>
     const bannedWords = [
-    "niga",
-    "nigga",
-    "niggers",
-    "ꓠꓲꓖꓖꓰꓣꓢ",
-    "tayo ay nasa fine dining",
-    "bugoy na koykoy",
-    "bugoy na koykoy",
-    "denise julia",
-    "red note",
-    "rednote",
-    "kendrick lamar",
-    "drake",
-    "katseye",
-    "san chai",
-    "lakers",
-    "san cai",
-    "barbie hsu",
-    "meteor garden",
-    "pagsusulit",
-    "diagnostic test",
-    "mini test",
-    "ly/",
-    "forms.gle",
-    "craigslist",
-    "gpt",
-    "gizmoapp",
-    "gizmo app",
-    "Mahjong Wins",
-    "Berikut",
-    "Battleground Royale",
-    "Leprechaun Riches",
-    "IDETOTO",
-    "ChoiW",
-    "•••••",
-    "⁠╹⁠▽⁠╹",
-    "pentobarbitol",
-    "nembutal",
-    "whats@pp",
-    "oxydrhere",
-    "rcacye",
-    "malayaako.ph.com",
-    "malayaako.ph",
-    "crystal meth",
-    "cocaine",
-    "fentanyl",
-    "ketamine",
-    "aiteacher",
-    "aiteacher.com",
-    "apateu",
-    "katseye",
-    "FOLLOW M3",
-    "Unichain",
-    "zerion",
-    "Schiller",
-    "Criminal Law Division",
-    "The Danger of Nuclear War Is Real",
-    "language learning model",
-    "scribd",
-    "the tesla cybertruck is an all electric",
-    "text-based AI",
-    "gawk 3000",
-    "gawk 2000",
-    "gawk gawk",
-    "wesley guo",
-    "Sheila guo",
-    "용",
-    "소",
-    "个",
-    "chloe san",
-    "bini Sheena",
-    "bini Mikha",
-    "bini Stacey",
-    "bini Gwen",
-    "bini Aiah",
-    "bini Jhoanna",
-    "bini colet",
-    "bini maloi",
-    "人",
-    "文",
-    "又",
-    "Miles Guo",
-    "只",
-    "angelica poquiz",
-    "Joriel yulo",
-    "angelica yulo",
-    "jual",
-    "cyt0",
-    "Guo Wengu",
-    "sabrina carpenter",
-    "Fß",
-    "hontivirus",
-    "b r a i n l",
-    "brainlest",
-    "skibid",
-    "biden or trump",
-    "trump or biden",
-    "Kin Ming Je",
-    "washington farm",
-    "guo farm",
-    "Gu Wengui",
-    "chinita",
-    "new china federation",
-    "xi farm",
-    "Guo Wengui",
-    "Kwok scam",
-    "Wengui Guo",
-    "WenguiGuo",
-    "vipvip",
-    "VIPVIP",
-    "Call girls",
-    "*Call",
-    "☏",
-    "!girls",
-    "#girls",
-    "@Girls",
-    "call girl",
-    "brain les",
-    "need anser",
-    "need answer",
-    "report nonsens",
-    "kimia farma",
-    "menggugurkan",
-    "OBAT PENDORONG",
-    "OBAT PENGGUGUR",
-    "obat tidur",
-    "obat bius",
-    "apotik",
-    "jual obat",
-    "obat aboris",
-    "misoprostol",
-    "cyto tec",
-    "cytotec",
-    "abortion pills",
-    "cbat",
-    "dick",
-    "ryu jun",
-    "kyline",
-    "mavy",
-    "m@via",
-    "heros of mavia",
-    "heroes of mavia",
-    "n!fty",
-    "nifty island",
-    "han so hee",
-    "my vlog",
-    "Ptafttasak",
-    "quiboloy",
-    "donbel",
-    "maris racal",
-    "bea alonzo",
-    "congtv",
-    "cong tv",
-    "viy",
-    "SAPPINES",
-    "MAXWIN",
-    "k!ffy",
-    "kiffy",
-    "k1ffy",
-    "INFINI88",
-    "DATUK168",
-    "tyronia",
-    "kangkong chips",
-    "mojica",
-    "name the song",
-    "name this song",
-    "chapa",
-    "chipi",
-    "chappa",
-    "chippi",
-    "herlene",
-    "answer key",
-    "de punggol",
-    "di punggol",
-    "pls answer",
-    "pa sagot",
-    "bea borres",
-    "help help",
-    "help naman",
-    "po please",
-    "need it na",
-    "pa help",
-    "catnel",
-    "cathniel",
-    "kathnel",
-    "k@th",
-    "kagayaku",
-    "bernadette smith",
-    "bernadeth smith",
-    "kim chu",
-    "christian gaza",
-    "xian lim",
-    "xtian gaza",
-    "rosmar",
-    "otnis",
-    "dj padilla",
-    "dj supremo",
-    "supremo",
-    "daniel padilla",
-    "d padilla",
-    "kath bernardo",
-    "kathryn bernardo",
-    "kath niel",
-    "deej",
-    "kathniel",
-    "call me daddy",
-    "text-based AI model",
-    "pray for israel",
-    "my tiktok",
-    "my youtube",
-    "pinoybidyologs",
-    "pamigay points",
-    "pamigay pt",
-    "libreng pt",
-    "libreng points",
-    "maderch0d",
-    "maderchud",
-    "maaderchod",
-    "maderchod",
-    "beshi",
-    "beshy",
-    "mwah",
-    "need na nga",
-    "need it now",
-    "need now",
-    "need answer",
-    "answer=report",
-    "need the answer",
-    "answer now",
-    "┻⁠",
-    "°⁠□⁠°",
-    "performance task",
-    "3ssay",
-    "ess@y",
-    "essay",
-    "quarterly assessment",
-    "quarterly exam",
-    "quarter exam",
-    "death spell",
-    "revenge spell",
-    "love spell",
-    "reaction paper",
-    "abortion pills",
-    "love potion",
-    "tangena",
-    "ㅎ",
-    "ㅍ",
-    "ㅌ",
-    "ㅋ",
-    "ㅊ",
-    "ㅉ",
-    "ㅈ",
-    "ㅇ",
-    "ㅆ",
-    "ㅅ",
-    "ㅃ",
-    "ㅂ",
-    "ㅁ",
-    "ㄹ",
-    "ㄸ",
-    "ㄷ",
-    "ㄴ",
-    "ㄲ",
-    "ㄱ",
-    "tanginang",
-    "shawra",
-    "sksk",
-    "kwk",
-    "brianlest",
-    "brainlist",
-    "web organizer",
-    "graphic organizer",
-    "nonsense=report",
-    "nonsense answer=report",
-    "Non sense answer = report​",
-    "break kami",
-    "break na kami",
-    "break na sila",
-    "malande",
-    "malandi",
-    "meuguru",
-    "yuck fou",
-    "byju",
-    "coursehero",
-    "quizlet",
-    "gautmath",
-    "fesbook",
-    "fesbuk",
-    "giatay",
-    "scandal",
-    "how to unalive",
-    "how to die",
-    "i hate my",
-    "engot",
-    "i'll kill",
-    "i h@t3",
-    "i h@te",
-    "i hate you",
-    "powta",
-    "unalive",
-    "magsuicide",
-    "#russia",
-    "#pray",
-    "sa pts",
-    "sa point",
-    "1na",
-    "aprille flores",
-    "pakamatay",
-    "jimin",
-    "changeoil",
-    "hi hi",
-    "G.O.O.G.L.E M.E.E.T",
-    "pucha",
-    "8 ballin",
-    "8ballin",
-    "tsing tsong",
-    "ilan taon ka",
-    "ang sarap mo",
-    "sh@",
-    "shaboo",
-    "shabu",
-    "putres",
-    "taragis",
-    "download this app",
-    "invitation code",
-    "invite code",
-    "gauth",
-    "g00gle",
-    "ka duo",
-    "kaduo",
-    "f r e",
-    "free free",
-    "FR€€",
-    "fcck",
-    "brainles",
-    "your @",
-    "snaptube",
-    "snapchat",
-    "bretman",
-    "bella poarch",
-    "team payaman",
-    "rkl",
-    "skl",
-    "tsupa",
-    "spoken poetry",
-    "shawtawt",
-    "shoutout",
-    "jam magno",
-    "yellowturd",
-    "yellowtard",
-    "guison",
-    "0 points",
-    "freepoint",
-    "fake friends",
-    "bich na peke",
-    "mama oni",
-    "toni fowler",
-    "hail hitler",
-    "heil hitler",
-    "libtard",
-    "tay digong",
-    "leni lugaw",
-    "qaqo",
-    "pinklawan",
-    "dilawan",
-    "fake vp",
-    "mamatay ka na",
-    "mamatay na ka",
-    "ko na mamatay",
-    "how to suicide",
-    "kill yu",
-    "pw3t",
-    "pwet",
-    "for todays video",
-    "for today's video",
-    "welcome to my vlog",
-    "ivana alawi",
-    "kingina",
-    "ki.ng",
-    "jutay",
-    "juts",
-    "daks",
-    "pak na pak",
-    "yyy",
-    "ggg",
-    "chat.site",
-    "gacha",
-    "xxx",
-    "bang.tan",
-    "bangtan",
-    "u c k",
-    "gag0",
-    "gago",
-    "ogag",
-    "futa",
-    "karat",
-    "malay ko",
-    "aba malay",
-    "pu ke",
-    "❤️​",
-    "t3st",
-    "test 1",
-    "pre test",
-    "pre-test",
-    "reflextion",
-    "sagot kaagad",
-    "paanswer",
-    "pa answer",
-    "pahelp",
-    "iyong repleksiyon",
-    "aking repleksiyon",
-    "research paper",
-    "performance task",
-    "a m o",
-    "i n a m",
-    "p0t",
-    "txanga",
-    "fxu",
-    "frontrowoffi",
-    "coinmaster",
-    "birdy",
-    "birdie",
-    "yubo.live",
-    "qanda",
-    "g-board",
-    "gboard",
-    "g-clip",
-    "gclip",
-    "clipclaps",
-    "who wants to earn",
-    "website.cc",
-    "sino ang naglalar",
-    "sinong naglalar",
-    "sino naglalar",
-    "freefire",
-    "pubg",
-    "hackdo",
-    "xvideo",
-    "inaniyo",
-    "inanyo",
-    "rapein",
-    "rape-in",
-    "rape ka",
-    "rape you",
-    "i will kill you",
-    "i want to die",
-    "how to die",
-    "mama mo",
-    "phub",
-    "fokfok",
-    "ukinna",
-    "ptangina",
-    "malay ko",
-    "salamat shop",
-    "shopee",
-    "bugak",
-    "uhuh",
-    "po rn",
-    "bugoc",
-    "bugok",
-    "hinayupak",
-    "fff",
-    "uhm",
-    "lll",
-    "pussi",
-    "pussy",
-    "possey",
-    "posseh",
-    "shoti",
-    "shawty",
-    "helpp",
-    "plz",
-    "answer fast",
-    "dnt kn",
-    "coco martin",
-    "cocomelon",
-    "cantot",
-    "cantut",
-    "iyot",
-    "prnhub",
-    "t.a.n.g.i.n.a",
-    "p.u.t.a.n.g.i.n.a",
-    "bakudev",
-    "earn crypt",
-    "p0t3",
-    "h3ntai",
-    "hentai",
-    "anim3",
-    "anime",
-    "amp0",
-    "boboh",
-    "thang ina",
-    "ggagg",
-    "vuvu",
-    "vovu",
-    "luv u",
-    "babe",
-    "i love u",
-    "i luv",
-    "i love you",
-    "lab yu",
-    "lab you",
-    "ulul",
-    "Cúm",
-    "hórny",
-    "fück",
-    "fùck",
-    "fck",
-    "math/way",
-    "math way",
-    "mathway",
-    "instagram.com",
-    "follow me on",
-    "tamud",
-    "lande nyo",
-    "landi nyo",
-    "lande niyo",
-    "lande mo",
-    "landi niyo",
-    "landi mo",
-    "tamad mo",
-    "tamad ka",
-    "b@d",
-    "trop@",
-    "bading",
-    "accla",
-    "tropahin",
-    "d!ck",
-    "dicc",
-    "dck",
-    "sx",
-    "gw@",
-    "pogi",
-    "gwap0",
-    "gwapo",
-    "cutie",
-    "cut3",
-    "kyut",
-    "bitcc",
-    "f@k",
-    "asshole",
-    "a s s",
-    "facc",
-    "nigg@",
-    "gayshit",
-    "i y o t",
-    "b o b o",
-    "f u c",
-    "s h i t",
-    "Yotninam",
-    "ampotek",
-    "potec",
-    "Ukinina",
-    "joke lang",
-    "depota",
-    "diputs",
-    "diputa",
-    "deputa",
-    "txanga",
-    "hakd",
-    "b o b o",
-    "sex vid",
-    "p/st",
-    "p1st",
-    "fisting",
-    "piste",
-    "crinushback",
-    "crush back",
-    "crushback",
-    "crashback",
-    "y@w",
-    "yawa",
-    "pisti",
-    "buwang",
-    "buang",
-    "naruto",
-    "uzumaki",
-    "ricci rivero",
-    "mia khalifa",
-    "webcomic",
-    "jo.wa",
-    "s2pid",
-    "stoopid",
-    "stoped",
-    "stupid",
-    "s2pd",
-    "beyblade",
-    "kab3t",
-    "kabet",
-    "bf",
-    "tongue ina",
-    "pa help",
-    "iyut",
-    "u10",
-    "iyot",
-    "hatdig",
-    "jaja",
-    "dck",
-    "follow nyo",
-    "follow niyo",
-    "follow me",
-    "ñema",
-    "nyeta",
-    "ñeta",
-    "number mo",
-    "joke lng",
-    "joke lang",
-    "jokla",
-    "bwisit",
-    "bwesit",
-    "bwect",
-    "bwict",
-    "bwiset",
-    "bwst",
-    "bwct",
-    "diputa",
-    "w.t.f",
-    "wtf",
-    "chaka",
-    "ka chat",
-    "ka-chat",
-    "who wants chat",
-    "meeting id",
-    "google meets",
-    "zoom meeting id",
-    "zoom id",
-    "passcode",
-    "punyemes",
-    "putreska",
-    "nyeta",
-    "nyem@",
-    "nyemas",
-    "potaka",
-    "padelete",
-    "g cash",
-    "images.app",
-    "goo.gl",
-    "the hulk",
-    "batman",
-    "superman",
-    "antman",
-    "spiderman",
-    "ironman",
-    "the avengers",
-    "zendaya",
-    "johnny depp",
-    "ny sins",
-    "johnny sins",
-    "amber heard",
-    "th!cc",
-    "thicc",
-    "f@t",
-    "fatso",
-    "fatty",
-    "ugli",
-    "dummy",
-    "rizz",
-    "xd",
-    "bb k",
-    "bby q",
-    "bb q",
-    "baby ko",
-    "duhh",
-    "dkopo",
-    "h@r",
-    "h@r0t",
-    "charot",
-    "bl@h",
-    "blabla",
-    "blah blah",
-    "tikt",
-    "t1kt",
-    "titok",
-    "p00p",
-    "poop",
-    "n00b",
-    "noob",
-    "paramore",
-    "eyy",
-    "ayy",
-    "oyy",
-    "ha ha",
-    "matt healy",
-    "h!nd0t",
-    "hindot",
-    "hihihi",
-    "bwaha",
-    "tikfans",
-    "sht",
-    "shd",
-    "dwow",
-    "hakdok",
-    "noodz",
-    "bhi3",
-    "bhie",
-    "sana all",
-    "sanaoil",
-    "sanaol",
-    "dsad",
-    "feet pic",
-    "onlifuns",
-    "onlifuns",
-    "onlypans",
-    "onlypuns",
-    "onlyfans",
-    "puckyou",
-    "puckyu",
-    "fb",
-    "pafollow",
-    "dawg",
-    "whatsapp",
-    "viber",
-    "sa tg",
-    "tg/me",
-    "discord.gg",
-    "edi kaw",
-    "edi ikaw",
-    "share mo lng",
-    "share mo lang",
-    "spill the tea",
-    "marites",
-    "tanong mo sa",
-    "oooo",
-    "ssss",
-    "malay ko",
-    "tarantad",
-    "ahha",
-    "searchmo",
-    "send pic",
-    "send noo",
-    "send nud",
-    "nudes",
-    "b00bs",
-    "boobs",
-    "s@l",
-    "salsal",
-    "pa mor",
-    "pamore",
-    "best president",
-    "robredog",
-    "delawan",
-    "dilawan",
-    "anyare",
-    "wawawa",
-    "ewan namin",
-    "ewan ko",
-    "e1 q",
-    "dnt care",
-    "dnt kn",
-    "dont know",
-    "diko alam",
-    "dikolam",
-    "di ko alam",
-    "i dont kn",
-    "im not sure",
-    "boboka",
-    "pakimo",
-    "pakemo",
-    "tatamad nyo",
-    "tatamad niyo",
-    "mmm",
-    "hjh",
-    "vovo",
-    "vuvo",
-    "taena",
-    "t@e",
-    "taen@",
-    "ex@m",
-    "ex.am",
-    "#brainl",
-    "#carry",
-    "neeed asap",
-    "reflection paper",
-    "quarterly test",
-    "quarterly exam",
-    "summative test",
-    "summative exam",
-    "test i",
-    "quiz",
-    "pagsusulit",
-    "sagot asap",
-    "pasagot po",
-    "need asap",
-    "goo.gle",
-    "goo/gle",
-    "googl3",
-    "just google",
-    "go.ogle",
-    "g00gle",
-    "go0gle",
-    "google mo",
-    "search mo",
-    "check google",
-    "gboard",
-    "kapal ng mu",
-    "kvpal",
-    "kup@l",
-    "koopal",
-    "kupal",
-    "luv u",
-    "i love you",
-    "labyou",
-    "labyu",
-    "sakalam",
-    "st. donna",
-    "st donna",
-    "uwu",
-    "ow@",
-    "jowa",
-    "dyowa",
-    "dyoga",
-    "dede",
-    "d3d3",
-    "wh@mos",
-    "whamos",
-    "z3inab",
-    "harake",
-    "donna bartolome",
-    "zeinab",
-    "selfi3",
-    "s3lf",
-    "selfie",
-    "mukbang",
-    "tanga ny",
-    "tanga ni",
-    "cp mo",
-    "cp reveal",
-    "pet reveal",
-    "phone reveal",
-    "face reveal",
-    "tanga ako",
-    "tanga ko",
-    "tanga mo",
-    "tanga ka",
-    "mga tanga",
-    "pamigay pt",
-    "p3ng",
-    "fr33",
-    "freee",
-    "free pt",
-    "libre pt",
-    "libreng pt",
-    "libreng pu",
-    "libre point",
-    "free points",
-    "freepoints",
-    "tqng",
-    "akdug",
-    "akdog",
-    "hanep",
-    "hayuf",
-    "fvck",
-    "kkrt",
-    "skrt",
-    "sksk",
-    "♡",
-    "f0t",
-    "fota",
-    "p0t@",
-    "dep0ta",
-    "deputa",
-    "meet.app",
-    "math/way",
-    "mathway",
-    "buzzbreak",
-    "shopback",
-    "cashback",
-    "olivia rodrigo",
-    "eilish",
-    "halsey",
-    "photomath",
-    "photo/math",
-    "photo math",
-    "fotomath",
-    "add mo ko",
-    "chat mo",
-    "caht",
-    "call/me",
-    "d@ddy",
-    "sugar dd",
-    "suga dd",
-    "suga baby",
-    "sugabby",
-    "sugar baby",
-    "sugah",
-    "sugar mommy",
-    "sugar daddy",
-    "cash papa",
-    "s3xt",
-    "sext",
-    "t3xt",
-    "ch@t",
-    "chat ta",
-    "h0w 0ld",
-    "ilan taon ka",
-    "anong school",
-    "an0ng school",
-    "how old are you",
-    "how old are u",
-    "text me",
-    "///",
-    "pink ven0m",
-    "pink venom",
-    "ariana grande",
-    "swiftie",
-    "taylor swift",
-    "beiber",
-    "pewdiepie",
-    "rastaman",
-    "andrew tate",
-    "alllivesmatter",
-    "ukenam",
-    "ukinam",
-    "kininam",
-    "kingina",
-    "putang",
-    "p00",
-    "add as brainliest",
-    "mark as brainliest",
-    "♥",
-    "youtu.be",
-    "ass. hole",
-    "ass/hole",
-    "butt/hole",
-    "butthole",
-    "booboo",
-    "vovo",
-    "not sure",
-    "di ka sure",
-    "di ko sure",
-    "di ako sure",
-    "di sure",
-    "magaral ka kasi",
-    "mag-aral ka kasi",
-    "makinig kasi kayo",
-    "i don't care",
-    "i don't know",
-    "i don't have access to the exact data",
-    "not able to provide up-to-date",
-    "as an AI",
-    "as a text-based AI",
-    "i am a text-based AI",
-    "cannot provide an answer",
-    "need more information about your question",
-    "i'm not sure what you mean",
-    "wiki",
-    "quora",
-    "chegg",
-    "slideshare",
-    "!!",
-    "??",
-    "ghgh",
-    "lmao",
-    "idc",
-    "idk",
-    "tuli ka",
-    "may tulu",
-    "may tulo",
-    "tule ka",
-    "tule na",
-    "tuli na",
-    "jakul",
-    "dyakool",
-    "dyakul",
-    "jacool",
-    "dyakol",
-    "j@c",
-    "j@k",
-    "jakol",
-    "jkl",
-    "pofsex",
-    "aaaa",
-    "hhh",
-    "ggwp",
-    "gonewild",
-    "phgw",
-    "alasjuicy",
-    "fetlife",
-    "f3t",
-    "fetish",
-    "MIR4",
-    "clash of clans",
-    "mine cr@ft",
-    "mine craft",
-    "minecraft",
-    "robux",
-    "m0bile legends",
-    "mobile legends",
-    "amogus",
-    "pokemon",
-    "puke",
-    "puki",
-    "pukemon",
-    "spirejoy",
-    "k@i",
-    "h0n",
-    "honkai",
-    "moonton",
-    "@pex legends",
-    "apex legends",
-    "l0r",
-    "r@nt",
-    "val0rant",
-    "v@lorant",
-    "valorant",
-    "fortnite",
-    "f0rtnite",
-    "genxhin",
-    "genshin",
-    "call of duty",
-    "free fire",
-    "L0L",
-    "league of legends",
-    "ragnarok m",
-    "d0t",
-    "dota",
-    "d0t@",
-    "bl0x",
-    "r0b",
-    "roblox",
-    "jajaja",
-    "jeje",
-    "hehehe",
-    "pakarat",
-    "k@r",
-    "h@h",
-    "hahaha",
-    "jk",
-    "bayot",
-    "bayut",
-    "blyat",
-    "bylat",
-    "cyka",
-    "bahog",
-    "bahug",
-    "blat bahog",
-    "bilat",
-    "web.facebook",
-    "download-full-free",
-    "download-free",
-    "kantut",
-    "xnxx",
-    "prnhub",
-    "2tnac",
-    "2tnak",
-    "totnak",
-    "kan2",
-    "c@n",
-    "k@n",
-    "k@ntot",
-    "can210",
-    "kantutin",
-    "kan210",
-    "redtube",
-    "n1gg",
-    "sh1t",
-    "sh it",
-    "shet",
-    "shyet",
-    "beeyotch",
-    "beeyatch",
-    "biach",
-    "btch",
-    "bi tch",
-    "biatch",
-    "bhad",
-    "FA CKIN",
-    "FU CKIN",
-    "hoeland",
-    "l-i-v-e",
-    "-live-",
-    "/live",
-    "/stream",
-    "murica",
-    "s.t.f.u",
-    "stfu",
-    "en-us/",
-    "add me",
-    "add mo ako",
-    "bitxh",
-    "pbb",
-    "com/dl",
-    "com/download",
-    "com/play",
-    "com/stream",
-    "com/watch",
-    "badbaby",
-    "site/facilities",
-    "contact me",
-    "send me",
-    "/contact",
-    "/webform",
-    "league-online",
-    "youporn",
-    "xvideos",
-    "game-free",
-    "steam.com",
-    "online-game",
-    "games free",
-    "free-game",
-    "free game",
-    "netflix and chill",
-    "-tv",
-    "in@",
-    "y@m",
-    "kudasai",
-    "yamete",
-    "tsundere",
-    "yandere",
-    "yaoi",
-    "manhwa",
-    "watch-free",
-    "free-watch",
-    "rate mo",
-    "pa rate",
-    "pa-rate",
-    "rate my",
-    "rate me",
-    "ang cute",
-    "cute ko",
-    "cute mo",
-    "cute ng",
-    "grindr",
-    "epbi",
-    "efbi",
-    "fb.com",
-    "facebook.com",
-    "on fb",
-    "sa fb",
-    "fb account",
-    "follow back",
-    "tik tok",
-    "tiktok",
-    "pinterest.com",
-    "instagram.com",
-    "send gcash",
-    "send load",
-    "subscribe my",
-    "subscribe to my",
-    "yt channel",
-    "500px",
-    "last.fm",
-    "episode-hd",
-    "stream-episode",
-    "episode-online",
-    "stream-hd",
-    "watch-on",
-    "123movies",
-    "tv-online",
-    "online-tv",
-    "tv-free",
-    "cornhub",
-    "pornhub",
-    "english-subtittles",
-    "english-subtitles",
-    "f@k",
-    "f@c",
-    "p@k",
-    "g@g",
-    "gagu",
-    "gagu",
-    "gago",
-    "gaggers",
-    "ghetto",
-    "jennie",
-    "loona",
-    "joon",
-    "bts",
-    "bangtan",
-    "black pink",
-    "blink army",
-    "army blink",
-    "blackpink",
-    "tv-free",
-    "free-tv",
-    "stream-direct",
-    "stream direct",
-    "direct-stream",
-    "d.i.r.e.c.t-s.t.r.e.a.m.i.n.g",
-    "boom pan",
-    "pak ganern",
-    "edi wow",
-    "movie-free",
-    "free-online",
-    "online-free",
-    "movie-online-free",
-    "full-movie",
-    "hd-movie",
-    "movie-hd",
-    "movie-full-hd",
-    "live-online-fight",
-    "tv-free",
-    "stream-movie",
-    "online-movie",
-    "online-full-movie",
-    "live-stream",
-    "live stream",
-    "livestream",
-    "patuli",
-    "namuka",
-    "namoka",
-    "inamo",
-    "inaneto",
-    "jakul",
-    "jakol",
-    "patotoy",
-    "shit",
-    "pacute",
-    "pakyo",
-    "pakyu",
-    "wirdo",
-    "wirdu",
-    "weirdo",
-    "boner",
-    "bonehead",
-    "boorat",
-    "buraot",
-    "tumbong",
-    "tukmol",
-    "walang kwenta",
-    "walang hiya",
-    "walang silbi",
-    "walang utak",
-    "chupain",
-    "tsupain",
-    "bayag",
-    "burat",
-    "burat ko",
-    "burat mo",
-    "bayag ko",
-    "bayag mo",
-    "titi ko",
-    "tsupa",
-    "chupa",
-    "tight-arse",
-    "tight-ass",
-    "tikol",
-    "tamud",
-    "tamod",
-    "tanga",
-    "tang ina",
-    "obob",
-    "tarantado",
-    "inamo",
-    "enaneto",
-    "sucker",
-    "sucker",
-    "suckass",
-    "son-of-a-bitch",
-    "son of a bitch",
-    "smart-ass",
-    "smart-arse",
-    "slag",
-    "skank",
-    "sisipain ko bayag mo",
-    "sira ang ulo",
-    "sipsipin mo ang titi ko",
-    "shmuck",
-    "schmuck",
-    "sandnigger",
-    "sand nigger",
-    "puwet",
-    "pututuy",
-    "putang ina nyo",
-    "putang ina mo",
-    "punyeta",
-    "Puki ng Ina Mo",
-    "puke mo",
-    "puke",
-    "prosti",
-    "pokpok",
-    "piss off",
-    "piece of shit",
-    "pangit",
-    "pakshet",
-    "pain in the ass",
-    "nutsack",
-    "naninigas ang titi ko",
-    "Nak Ng Pu",
-    "malintong",
-    "titi mo",
-    "maliit ang titi mo",
-    "malibo",
-    "malibog",
-    "malandi",
-    "malaki ang susu mo",
-    "magkantutan tayo",
-    "lintek ka",
-    "Kantot",
-    "junglebunny",
-    "jungle bunny",
-    "jizz",
-    "jerk",
-    "jackass",
-    "inutil",
-    "inutel",
-    "ignorante",
-    "horny",
-    "hooker",
-    "hindot",
-    "fucker",
-    "dyoga",
-    "dipshit",
-    "wack",
-    "tit",
-    "tae",
-    "shit",
-    "scab",
-    "retard",
-    "pussy",
-    "pussi",
-    "Puki",
-    "prick",
-    "poo",
-    "piss",
-    "perver",
-    "nigger",
-    "nigga",
-    "motherfuck",
-    "lesb",
-    "kunt",
-    "kiki",
-    "joga",
-    "Gago",
-    "Gaga",
-    "fuck",
-    "fag",
-    "ebak",
-    "dumb",
-    "dum",
-    "douche",
-    "dork",
-    "dick",
-    "cunt",
-    "cum",
-    "creep",
-    "cock",
-    "clit",
-    "butt",
-    "booze",
-    "bobo",
-    "bitch",
-    "bimbo",
-    "bastard",
-    "ass",
-    "arse",
-    "airhead",
+      "niga", "nigga", "niggers", "ꓠꓲꓖꓖꓰꓣꓢ", "tayo ay nasa fine dining", "bugoy na koykoy", "denise julia", "red note", "rednote", "kendrick lamar", "drake", "katseye", "san chai", "lakers", "san cai", "barbie hsu", "meteor garden", "pagsusulit", "diagnostic test", "mini test", "ly/", "forms.gle", "craigslist", "gpt", "gizmoapp", "gizmo app", "Mahjong Wins", "Berikut", "Battleground Royale", "Leprechaun Riches", "IDETOTO", "ChoiW", "•••••", "⁠╹⁠▽⁠╹", "pentobarbitol", "nembutal", "whats@pp", "oxydrhere", "rcacye", "malayaako.ph.com", "malayaako.ph", "crystal meth", "cocaine", "fentanyl", "ketamine", "aiteacher", "aiteacher.com", "apateu", "FOLLOW M3", "Unichain", "zerion", "Schiller", "Criminal Law Division", "The Danger of Nuclear War Is Real", "language learning model", "scribd", "the tesla cybertruck is an all electric", "text-based AI", "gawk 3000", "gawk 2000", "gawk gawk", "wesley guo", "Sheila guo", "용", "소", "个", "chloe san", "bini Sheena", "bini Mikha", "bini Stacey", "bini Gwen", "bini Aiah", "bini Jhoanna", "bini colet", "bini maloi", "人", "文", "又", "Miles Guo", "只", "angelica poquiz", "Joriel yulo", "angelica yulo", "jual", "cyt0", "Guo Wengu", "sabrina carpenter", "Fß", "hontivirus", "b r a i n l", "brainlest", "skibid", "biden or trump", "trump or biden", "Kin Ming Je", "washington farm", "guo farm", "Gu Wengui", "chinita", "new china federation", "xi farm", "Guo Wengui", "Kwok scam", "Wengui Guo", "WenguiGuo", "vipvip", "VIPVIP", "Call girls", "*Call", "☏", "!girls", "#girls", "@Girls", "call girl", "brain les", "need anser", "need answer", "report nonsens", "kimia farma", "menggugurkan", "OBAT PENDORONG", "OBAT PENGGUGUR", "obat tidur", "obat bius", "apotik", "jual obat", "obat aboris", "misoprostol", "cyto tec", "cytotec", "abortion pills", "cbat", "dick", "ryu jun", "kyline", "mavy", "m@via", "heros of mavia", "heroes of mavia", "n!fty", "nifty island", "han so hee", "my vlog", "Ptafttasak", "quiboloy", "donbel", "maris racal", "bea alonzo", "congtv", "cong tv", "viy", "SAPPINES", "MAXWIN", "k!ffy", "kiffy", "k1ffy", "INFINI88", "DATUK168", "tyronia", "kangkong chips", "mojica", "name the song", "name this song", "chapa", "chipi", "chappa", "chippi", "herlene", "answer key", "de punggol", "di punggol", "pls answer", "pa sagot", "bea borres", "help help", "help naman", "po please", "need it na", "pa help", "catnel", "cathniel", "kathnel", "k@th", "kagayaku", "bernadette smith", "bernadeth smith", "kim chu", "christian gaza", "xian lim", "xtian gaza", "rosmar", "otnis", "dj padilla", "dj supremo", "supremo", "daniel padilla", "d padilla", "kath bernardo", "kathryn bernardo", "kath niel", "deej", "kathniel", "call me daddy", "text-based AI model", "pray for israel", "my tiktok", "my youtube", "pinoybidyologs", "pamigay points", "pamigay pt", "libreng pt", "libreng points", "maderch0d", "maderchud", "maaderchod", "maderchod", "beshi", "beshy", "mwah", "need na nga", "need it now", "need now", "need answer", "answer=report", "need the answer", "answer now", "┻⁠", "°⁠□⁠°", "performance task", "3ssay", "ess@y", "essay", "quarterly assessment", "quarterly exam", "quarter exam", "death spell", "revenge spell", "love spell", "reaction paper", "love potion", "tangena", "ㅎ", "ㅍ", "ㅌ", "ㅋ", "ㅊ", "ㅉ", "ㅈ", "ㅇ", "ㅆ", "ㅅ", "ㅃ", "ㅂ", "ㅁ", "ㄹ", "ㄸ", "ㄷ", "ㄴ", "ㄲ", "ㄱ", "tanginang", "shawra", "sksk", "kwk", "brianlest", "brainlist", "web organizer", "graphic organizer", "nonsense=report", "nonsense answer=report", "Non sense answer = report​", "break kami", "break na kami", "break na sila", "malande", "malandi", "meuguru", "yuck fou", "byju", "coursehero", "quizlet", "gautmath", "fesbook", "fesbuk", "giatay", "scandal", "how to unalive", "how to die", "i hate my", "engot", "i'll kill", "i h@t3", "i h@te", "i hate you", "powta", "unalive", "magsuicide", "#russia", "#pray", "sa pts", "sa point", "1na", "aprille flores", "pakamatay", "jimin", "changeoil", "hi hi", "G.O.O.G.L.E M.E.E.T", "pucha", "8 ballin", "8ballin", "tsing tsong", "ilan taon ka", "ang sarap mo", "sh@", "shaboo", "shabu", "putres", "taragis", "download this app", "invitation code", "invite code", "gauth", "g00gle", "ka duo", "kaduo", "f r e", "free free", "FR€€", "fcck", "brainles", "your @", "snaptube", "snapchat", "bretman", "bella poarch", "team payaman", "rkl", "skl", "tsupa", "spoken poetry", "shawtawt", "shoutout", "jam magno", "yellowturd", "yellowtard", "guison", "0 points", "freepoint", "fake friends", "bich na peke", "mama oni", "toni fowler", "hail hitler", "heil hitler", "libtard", "tay digong", "leni lugaw", "qaqo", "pinklawan", "dilawan", "fake vp", "mamatay ka na", "mamatay na ka", "ko na mamatay", "how to suicide", "kill yu", "pw3t", "pwet", "for todays video", "for today's video", "welcome to my vlog", "ivana alawi", "kingina", "ki.ng", "jutay", "juts", "daks", "pak na pak", "yyy", "ggg", "chat.site", "gacha", "xxx", "bang.tan", "bangtan", "u c k", "gag0", "gago", "ogag", "futa", "karat", "malay ko", "aba malay", "pu ke", "❤️​", "t3st", "test 1", "pre test", "pre-test", "reflextion", "sagot kaagad", "paanswer", "pa answer", "pahelp", "iyong repleksiyon", "aking repleksiyon", "research paper", "a m o", "i n a m", "p0t", "txanga", "fxu", "frontrowoffi", "coinmaster", "birdy", "birdie", "yubo.live", "qanda", "g-board", "gboard", "g-clip", "gclip", "clipclaps", "who wants to earn", "website.cc", "sino ang naglalar", "sinong naglalar", "sino naglalar", "freefire", "pubg", "hackdo", "xvideo", "inaniyo", "inanyo", "rapein", "rape-in", "rape ka", "rape you", "i will kill you", "i want to die", "mama mo", "phub", "fokfok", "ukinna", "ptangina", "salamat shop", "shopee", "bugak", "uhuh", "po rn", "bugoc", "bugok", "hinayupak", "fff", "uhm", "lll", "pussi", "pussy", "possey", "posseh", "shoti", "shawty", "helpp", "plz", "answer fast", "dnt kn", "coco martin", "cocomelon", "cantot", "cantut", "iyot", "prnhub", "t.a.n.g.i.n.a", "p.u.t.a.n.g.i.n.a", "bakudev", "earn crypt", "p0t3", "h3ntai", "hentai", "anim3", "anime", "amp0", "boboh", "thang ina", "ggagg", "vuvu", "vovu", "luv u", "babe", "i love u", "i luv", "i love you", "lab yu", "lab you", "ulul", "Cúm", "hórny", "fück", "fùck", "fck", "math/way", "math way", "mathway", "instagram.com", "follow me on", "tamud", "lande nyo", "landi nyo", "lande niyo", "lande mo", "landi niyo", "landi mo", "tamad mo", "tamad ka", "b@d", "trop@", "bading", "accla", "tropahin", "d!ck", "dicc", "dck", "sx", "gw@", "pogi", "gwap0", "gwapo", "cutie", "cut3", "kyut", "bitcc", "f@k", "asshole", "a s s", "facc", "nigg@", "gayshit", "i y o t", "b o b o", "f u c", "s h i t", "Yotninam", "ampotek", "potec", "Ukinina", "joke lang", "depota", "diputs", "diputa", "deputa", "hakd", "sex vid", "p/st", "p1st", "fisting", "piste", "crinushback", "crush back", "crushback", "crashback", "y@w", "yawa", "pisti", "buwang", "buang", "naruto", "uzumaki", "ricci rivero", "mia khalifa", "webcomic", "jo.wa", "s2pid", "stoopid", "stoped", "stupid", "s2pd", "beyblade", "kab3t", "kabet", "bf", "tongue ina", "iyut", "u10", "hatdig", "jaja", "follow nyo", "follow niyo", "follow me", "ñema", "nyeta", "ñeta", "number mo", "joke lng", "jokla", "bwisit", "bwesit", "bwect", "bwict", "bwiset", "bwst", "bwct", "w.t.f", "wtf", "chaka", "ka chat", "ka-chat", "who wants chat", "meeting id", "google meets", "zoom meeting id", "zoom id", "passcode", "punyemes", "putreska", "nyem@", "nyemas", "potaka", "padelete", "g cash", "images.app", "goo.gl", "the hulk", "batman", "superman", "antman", "spiderman", "ironman", "the avengers", "zendaya", "johnny depp", "ny sins", "johnny sins", "amber heard", "th!cc", "thicc", "f@t", "fatso", "fatty", "ugli", "dummy", "rizz", "xd", "bb k", "bby q", "bb q", "baby ko", "duhh", "dkopo", "h@r", "h@r0t", "charot", "bl@h", "blabla", "blah blah", "tikt", "t1kt", "titok", "p00p", "poop", "n00b", "noob", "paramore", "eyy", "ayy", "oyy", "ha ha", "matt healy", "h!nd0t", "hindot", "hihihi", "bwaha", "tikfans", "sht", "shd", "dwow", "hakdok", "noodz", "bhi3", "bhie", "sana all", "sanaoil", "sanaol", "dsad", "feet pic", "onlifuns", "onlypans", "onlypuns", "onlyfans", "puckyou", "puckyu", "fb", "pafollow", "dawg", "whatsapp", "viber", "sa tg", "tg/me", "discord.gg", "edi kaw", "edi ikaw", "share mo lng", "share mo lang", "spill the tea", "marites", "tanong mo sa", "oooo", "ssss", "tarantad", "ahha", "searchmo", "send pic", "send noo", "send nud", "nudes", "b00bs", "boobs", "s@l", "salsal", "pa mor", "pamore", "best president", "robredog", "delawan", "dilawan", "anyare", "wawawa", "ewan namin", "ewan ko", "e1 q", "dnt care", "dont know", "diko alam", "dikolam", "di ko alam", "i dont kn", "im not sure", "boboka", "pakimo", "pakemo", "tatamad nyo", "tatamad niyo", "mmm", "hjh", "vovo", "vuvo", "taena", "t@e", "taen@", "ex@m", "ex.am", "#brainl", "#carry", "neeed asap", "reflection paper", "quarterly test", "summative test", "summative exam", "test i", "quiz", "sagot asap", "pasagot po", "need asap", "goo.gle", "goo/gle", "googl3", "just google", "go.ogle", "go0gle", "google mo", "search mo", "check google", "kapal ng mu", "kvpal", "kup@l", "koopal", "kupal", "labyou", "labyu", "sakalam", "st. donna", "st donna", "uwu", "ow@", "jowa", "dyowa", "dyoga", "dede", "d3d3", "wh@mos", "whamos", "z3inab", "harake", "donna bartolome", "zeinab", "selfi3", "s3lf", "selfie", "mukbang", "tanga ny", "tanga ni", "cp mo", "cp reveal", "pet reveal", "phone reveal", "face reveal", "tanga ako", "tanga ko", "tanga mo", "tanga ka", "mga tanga", "p3ng", "fr33", "freee", "free pt", "libre pt", "libreng pu", "libre point", "free points", "freepoints", "tqng", "akdug", "akdog", "hanep", "hayuf", "fvck", "kkrt", "skrt", "♡", "f0t", "fota", "p0t@", "dep0ta", "meet.app", "buzzbreak", "shopback", "cashback", "olivia rodrigo", "eilish", "halsey", "photomath", "photo/math", "photo math", "fotomath", "add mo ko", "chat mo", "caht", "call/me", "d@ddy", "sugar dd", "suga dd", "suga baby", "sugabby", "sugar baby", "sugah", "sugar mommy", "sugar daddy", "cash papa", "s3xt", "sext", "t3xt", "ch@t", "chat ta", "h0w 0ld", "ilan taon ka", "anong school", "an0ng school", "how old are you", "how old are u", "text me", "///", "pink ven0m", "pink venom", "ariana grande", "swiftie", "taylor swift", "beiber", "pewdiepie", "rastaman", "andrew tate", "alllivesmatter", "ukenam", "ukinam", "kininam", "p00", "add as brainliest", "mark as brainliest", "♥", "youtu.be", "ass. hole", "ass/hole", "butt/hole", "butthole", "booboo", "not sure", "di ka sure", "di ko sure", "di ako sure", "di sure", "magaral ka kasi", "mag-aral ka kasi", "makinig kasi kayo", "i don't care", "i don't know", "i don't have access to the exact data", "not able to provide up-to-date", "as an AI", "as a text-based AI", "i am a text-based AI", "cannot provide an answer", "need more information about your question", "i'm not sure what you mean", "wiki", "quora", "chegg", "slideshare", "!!", "??", "ghgh", "lmao", "idc", "idk", "tuli ka", "may tulu", "may tulo", "tule ka", "tule na", "tuli na", "jakul", "dyakool", "dyakul", "jacool", "dyakol", "j@c", "j@k", "jakol", "jkl", "pofsex", "aaaa", "hhh", "ggwp", "gonewild", "phgw", "alasjuicy", "fetlife", "f3t", "fetish", "MIR4", "clash of clans", "mine cr@ft", "mine craft", "minecraft", "robux", "m0bile legends", "mobile legends", "amogus", "pokemon", "puke", "puki", "pukemon", "spirejoy", "k@i", "h0n", "honkai", "moonton", "@pex legends", "apex legends", "l0r", "r@nt", "val0rant", "v@lorant", "valorant", "fortnite", "f0rtnite", "genxhin", "genshin", "call of duty", "free fire", "L0L", "league of legends", "ragnarok m", "d0t", "dota", "d0t@", "bl0x", "r0b", "roblox", "jajaja", "jeje", "hehehe", "pakarat", "k@r", "h@h", "hahaha", "jk", "bayot", "bayut", "blyat", "bylat", "cyka", "bahog", "bahug", "blat bahog", "bilat", "web.facebook", "download-full-free", "download-free", "kantut", "xnxx", "prnhub", "2tnac", "2tnak", "totnak", "kan2", "c@n", "k@n", "k@ntot", "can210", "kantutin", "kan210", "redtube", "n1gg", "sh1t", "sh it", "shet", "shyet", "beeyotch", "beeyatch", "biach", "btch", "bi tch", "biatch", "bhad", "FA CKIN", "FU CKIN", "hoeland", "l-i-v-e", "-live-", "/live", "/stream", "murica", "s.t.f.u", "stfu", "en-us/", "add me", "add mo ako", "bitxh", "pbb", "com/dl", "com/download", "com/play", "com/stream", "com/watch", "badbaby", "site/facilities", "contact me", "send me", "/contact", "/webform", "league-online", "youporn", "xvideos", "game-free", "steam.com", "online-game", "games free", "free-game", "free game", "netflix and chill", "-tv", "in@", "y@m", "kudasai", "yamete", "tsundere", "yandere", "yaoi", "manhwa", "watch-free", "free-watch", "rate mo", "pa rate", "pa-rate", "rate my", "rate me", "ang cute", "cute ko", "cute mo", "cute ng", "grindr", "epbi", "efbi", "fb.com", "facebook.com", "on fb", "sa fb", "fb account", "follow back", "tik tok", "tiktok", "pinterest.com", "send gcash", "send load", "subscribe my", "subscribe to my", "yt channel", "500px", "last.fm", "episode-hd", "stream-episode", "episode-online", "stream-hd", "watch-on", "123movies", "tv-online", "online-tv", "tv-free", "cornhub", "pornhub", "english-subtittles", "english-subtitles", "f@k", "f@c", "p@k", "g@g", "gagu", "gaggers", "ghetto", "jennie", "loona", "joon", "bts", "bangtan", "black pink", "blink army", "army blink", "blackpink", "free-tv", "stream-direct", "stream direct", "direct-stream", "d.i.r.e.c.t-s.t.r.e.a.m.i.n.g", "boom pan", "pak ganern", "edi wow", "movie-free", "free-online", "online-free", "movie-online-free", "full-movie", "hd-movie", "movie-hd", "movie-full-hd", "live-online-fight", "stream-movie", "online-movie", "online-full-movie", "live-stream", "live stream", "livestream", "patuli", "namuka", "namoka", "inamo", "inaneto", "patotoy", "shit", "pacute", "pakyo", "pakyu", "wirdo", "wirdu", "weirdo", "boner", "bonehead", "boorat", "buraot", "tumbong", "tukmol", "walang kwenta", "walang hiya", "walang silbi", "walang utak", "chupain", "tsupain", "bayag", "burat", "burat ko", "burat mo", "bayag ko", "bayag mo", "titi ko", "tsupa", "chupa", "tight-arse", "tight-ass", "tikol", "tamud", "tamod", "tanga", "tang ina", "obob", "tarantado", "inamo", "enaneto", "sucker", "suckass", "son-of-a-bitch", "son of a bitch", "smart-ass", "smart-arse", "slag", "skank", "sisipain ko bayag mo", "sira ang ulo", "sipsipin mo ang titi ko", "shmuck", "schmuck", "sandnigger", "sand nigger", "puwet", "pututuy", "putang ina nyo", "putang ina mo", "punyeta", "Puki ng Ina Mo", "puke mo", "prosti", "pokpok", "piss off", "piece of shit", "pangit", "pakshet", "pain in the ass", "nutsack", "naninigas ang titi ko", "Nak Ng Pu", "malintong", "titi mo", "maliit ang titi mo", "malibo", "malibog", "malaki ang susu mo", "magkantutan tayo", "lintek ka", "Kantot", "junglebunny", "jungle bunny", "jizz", "jerk", "jackass", "inutil", "inutel", "ignorante", "horny", "hooker", "hindot", "fucker", "dipshit", "wack", "tit", "tae", "scab", "retard", "pussi", "Puki", "prick", "poo", "piss", "perver", "nigger", "motherfuck", "lesb", "kunt", "kiki", "joga", "Gago", "Gaga", "fuck", "fag", "ebak", "dumb", "dum", "douche", "dork", "cunt", "cum", "creep", "cock", "clit", "butt", "booze", "bobo", "bitch", "bimbo", "bastard", "ass", "arse", "airhead"
     ];
+
+    let currentText = '';
+    let foundWords = [];
 
     function escapeHTML(str) {
       return str.replace(/&/g, "&amp;")
@@ -1562,71 +402,145 @@ button#resetBtn:focus {
                 .replace(/'/g, "&#39;");
     }
 
+    function updateCharCounter() {
+      const textarea = document.getElementById('input-text');
+      const counter = document.getElementById('char-counter');
+      counter.textContent = textarea.value.length;
+    }
+
+    function showStatus(message, type = 'info') {
+      const statusDiv = document.getElementById('status-message');
+      statusDiv.textContent = message;
+      statusDiv.className = type;
+    }
+
+    function showLoading(show = true) {
+      const loadingDiv = document.getElementById('loading');
+      const checkBtn = document.getElementById('check-btn');
+      
+      loadingDiv.style.display = show ? 'flex' : 'none';
+      checkBtn.disabled = show;
+    }
+
     function checkBanWords() {
-      const text = document.getElementById('inputText').value;
-      const output = document.getElementById('output');
-      const loading = document.getElementById('loading');
-      const btn = document.getElementById('checkBtn');
-      const highlightedDiv = document.getElementById('highlightedText');
+      const text = document.getElementById('input-text').value;
+      const highlightedSection = document.getElementById('highlighted-section');
+      const highlightedText = document.getElementById('highlighted-text');
+      const actionButtons = document.getElementById('action-buttons-after-check');
 
       if (!text.trim()) {
-        output.textContent = "Please enter some text.";
-        highlightedDiv.innerHTML = '';
+        showStatus("Please enter some text to check.", 'error');
+        highlightedSection.style.display = 'none';
         return;
       }
 
-      loading.style.display = 'block';
-      btn.disabled = true;
-      output.textContent = '';
-      highlightedDiv.innerHTML = '';
+      showLoading(true);
+      showStatus("Checking for banned words...", 'info');
 
-      const escapedWords = bannedWords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-      const pattern = escapedWords.join('|');
-      const regex = new RegExp(pattern, 'gi');
+      // Simulate processing time for better UX
+      setTimeout(() => {
+        currentText = text;
+        
+        // Create regex pattern from banned words
+        const escapedWords = bannedWords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const pattern = escapedWords.join('|');
+        const regex = new RegExp(pattern, 'gi');
 
-      let match;
-      const highlights = [];
-      while ((match = regex.exec(text)) !== null) {
-        highlights.push({
-          word: match[0],
-          index: match.index,
-          length: match[0].length
+        let match;
+        const highlights = [];
+        foundWords = [];
+        
+        while ((match = regex.exec(text)) !== null) {
+          highlights.push({
+            word: match[0],
+            index: match.index,
+            length: match[0].length
+          });
+          foundWords.push(match[0].toLowerCase());
+          if (match.index === regex.lastIndex) regex.lastIndex++;
+        }
+
+        showLoading(false);
+
+        if (highlights.length === 0) {
+          showStatus("✅ Great! No banned words found in your text.", 'success');
+          highlightedSection.style.display = 'none';
+          actionButtons.style.display = 'none';
+          return;
+        }
+
+        // Remove duplicates and show results
+        const uniqueWords = [...new Set(foundWords)];
+        const wordCount = highlights.length;
+        const uniqueCount = uniqueWords.length;
+        
+        showStatus(`⚠️ Found ${wordCount} banned word${wordCount > 1 ? 's' : ''} (${uniqueCount} unique): ${uniqueWords.join(", ")}`, 'error');
+
+        // Highlight banned words in text
+        let result = '';
+        let lastIndex = 0;
+        highlights.sort((a, b) => a.index - b.index);
+        
+        highlights.forEach(({word, index, length}) => {
+          result += escapeHTML(text.substring(lastIndex, index));
+          result += '<span class="highlight">' + escapeHTML(text.substr(index, length)) + '<span class="highlight-icon">⚠️</span></span>';
+          lastIndex = index + length;
         });
-        if (match.index === regex.lastIndex) regex.lastIndex++;
-      }
-
-      loading.style.display = 'none';
-      btn.disabled = false;
-
-      if (highlights.length === 0) {
-          output.textContent = "✅ No banned words found!";
-          output.style.color = "#5cb85c";
-          highlightedDiv.textContent = text;
-        return;
-      }
-
-      const uniqueWords = [...new Set(highlights.map(h => h.word.toLowerCase()))];
-      output.innerHTML = "⚠️ Banned words found: <strong>" + uniqueWords.join(", ") + "</strong>";
-      output.style.color = "#d9534f";
-
-      let result = '';
-      let lastIndex = 0;
-      highlights.sort((a, b) => a.index - b.index);
-      highlights.forEach(({word, index, length}) => {
-        result += escapeHTML(text.substring(lastIndex, index));
-        result += '<span class="highlight">' + escapeHTML(text.substr(index, length)) + '</span>';
-        lastIndex = index + length;
-      });
-      result += escapeHTML(text.substring(lastIndex));
-      highlightedDiv.innerHTML = result;
+        result += escapeHTML(text.substring(lastIndex));
+        
+        highlightedText.innerHTML = result;
+        highlightedSection.style.display = 'block';
+        actionButtons.style.display = 'flex';
+      }, 800);
     }
 
     function resetFields() {
-      document.getElementById('inputText').value = '';
-      document.getElementById('output').innerHTML = "Detected words will appear here.";
-      document.getElementById('output').style.color = "#333";
-      document.getElementById('highlightedText').innerHTML = '';
+      document.getElementById('input-text').value = '';
+      document.getElementById('highlighted-section').style.display = 'none';
+      document.getElementById('action-buttons-after-check').style.display = 'none';
+      showStatus("Enter text above and click \"Check Banned Words\" to get started.", 'info');
+      updateCharCounter();
+      currentText = '';
+      foundWords = [];
     }
+
+    function copyCleanText() {
+      if (!currentText) return;
+      
+      // Remove banned words from text
+      let cleanText = currentText;
+      foundWords.forEach(word => {
+        const regex = new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        cleanText = cleanText.replace(regex, '[REMOVED]');
+      });
+      
+      navigator.clipboard.writeText(cleanText).then(() => {
+        showStatus("✅ Clean text copied to clipboard!", 'success');
+      }).catch(() => {
+        showStatus("❌ Failed to copy text. Please try again.", 'error');
+      });
+    }
+
+    function copyHighlightedText() {
+      if (!currentText) return;
+      
+      navigator.clipboard.writeText(currentText).then(() => {
+        showStatus("✅ Original text copied to clipboard!", 'success');
+      }).catch(() => {
+        showStatus("❌ Failed to copy text. Please try again.", 'error');
+      });
+    }
+
+    // Event listeners
+    document.getElementById('input-text').addEventListener('input', updateCharCounter);
+    document.getElementById('input-text').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && e.ctrlKey) {
+        checkBanWords();
+      }
+    });
+
+    // Initialize character counter
+    updateCharCounter();
   </script>
 </body>
 </html>
