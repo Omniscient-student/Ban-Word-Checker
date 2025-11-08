@@ -19,7 +19,7 @@ html, body {
 }
 
 #container {
-  background-color: #fff;
+  background-color: #fff; 
   box-shadow: 0 6px 12px rgba(0,0,0,0.1); 
   border-radius: 10px;
   padding: 20px 25px 25px;
@@ -34,7 +34,7 @@ html, body {
   font-family: 'Poppins', Arial, sans-serif;
   font-weight: 700;
   font-size: 1.8em;
-  color: #3399ff;
+  color: #3399ff; 
   text-align: center;
   margin-bottom: 20px;
 }
@@ -1608,13 +1608,13 @@ button#resetBtn:focus {
 
       let result = '';
       let lastIndex = 0;
+      highlights.sort((a, b) => a.index - b.index);
       highlights.forEach(({word, index, length}) => {
         result += escapeHTML(text.substring(lastIndex, index));
         result += '<span class="highlight">' + escapeHTML(text.substr(index, length)) + '</span>';
         lastIndex = index + length;
       });
-      result += escapeHTML(text.substring(las
-      highlights.sort((a, b) => a.index - b.index);tIndex));
+      result += escapeHTML(text.substring(lastIndex));
       highlightedDiv.innerHTML = result;
     }
 
@@ -1627,4 +1627,3 @@ button#resetBtn:focus {
   </script>
 </body>
 </html>
-
