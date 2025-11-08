@@ -5,8 +5,8 @@
   <base target="_top">
   <style>
 html, body {
-  background-color: #f8f9fa; /* Light gray background */
-  font-family: 'Poppins', Arial, sans-serif; /* Optional modern font */
+  background-color: #f8f9fa; 
+  font-family: 'Poppins', Arial, sans-serif; 
   margin: 0;
   padding: 10px;
   height: 100%;
@@ -19,8 +19,8 @@ html, body {
 }
 
 #container {
-  background-color: #fff; /* White container */
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1); /* subtle shadow */
+  background-color: #fff; 
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1); 
   border-radius: 10px;
   padding: 20px 25px 25px;
   max-width: 600px;
@@ -33,123 +33,150 @@ html, body {
 #heading {
   font-family: 'Poppins', Arial, sans-serif;
   font-weight: 700;
-  font-size: 1.8em;
+  font-size: clamp(1.5em, 4vw, 2em);
   color: #3399ff; /* Primary blue */
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: clamp(15px, 3vw, 20px);
+  line-height: 1.2;
 }
 
 #logo {
-  width: 100px;
+  width: clamp(80px, 15vw, 100px);
   margin: 0 auto 12px;
   flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+#logo:hover {
+  transform: scale(1.05);
 }
 
 textarea {
   resize: vertical;
   flex-grow: 1;
   width: 100%;
-  font-size: 13px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  font-size: clamp(14px, 1.5vw, 16px);
+  padding: clamp(8px, 2vw, 12px);
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
   box-sizing: border-box;
-  margin-bottom: 8px;
-  min-height: 100px;
-  max-height: 160px;
+  margin-bottom: 12px;
+  min-height: clamp(100px, 20vh, 160px);
+  max-height: 300px;
   overflow-y: auto;
   font-family: inherit;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  line-height: 1.5;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #3399ff;
+  box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.2);
 }
 
 /* Check button: medium width */
+.button-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
 button#checkBtn {
-  align-self: center;
-  min-width: 140px;
-  max-width: 180px;
-  width: 100%;
+  flex: 0 1 auto;
+  min-width: min(140px, 45%);
   background-color: #3399ff;
   color: white;
-  font-weight: bold;
-  padding: 8px 0;
-  border-radius: 5px;
-  margin-bottom: 12px;
+  font-weight: 600;
+  padding: clamp(8px, 2vw, 12px) clamp(16px, 3vw, 24px);
+  border-radius: 8px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
   outline-offset: 2px;
   text-align: center;
+  font-size: clamp(14px, 1.5vw, 16px);
+  box-shadow: 0 2px 4px rgba(51, 153, 255, 0.2);
 }
 
 /* Reset button: smaller width */
 button#resetBtn {
-  align-self: center;
-  min-width: 90px;
-  max-width: 120px;
-  width: 100%;
+  flex: 0 1 auto;
+  min-width: min(90px, 35%);
   background-color: #6c757d;
   color: white;
-  font-weight: bold;
-  padding: 8px 0;
-  border-radius: 5px;
-  margin-bottom: 12px;
+  font-weight: 600;
+  padding: clamp(8px, 2vw, 12px) clamp(16px, 3vw, 24px);
+  border-radius: 8px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
   outline-offset: 2px;
   text-align: center;
+  font-size: clamp(14px, 1.5vw, 16px);
+  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.2);
 }
 
 button#checkBtn:hover,
 button#checkBtn:focus {
   background-color: #267acc;
   transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(51, 153, 255, 0.3);
 }
 
 button#resetBtn:hover,
 button#resetBtn:focus {
   background-color: #5a6268;
   transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
 }
 
 #output {
   flex-shrink: 0;
-  min-height: 30px;
-  max-height: 80px;
+  min-height: clamp(30px, 8vh, 50px);
+  max-height: clamp(80px, 15vh, 120px);
   width: 100%;
-  padding: 6px;
+  padding: clamp(8px, 2vw, 12px);
   box-sizing: border-box;
-  border: 1px solid #ccc;
+  border: 2px solid #e0e0e0;
   background-color: #f9f9f9;
   white-space: pre-wrap;
   overflow-y: auto;
-  font-size: 13px;
-  border-radius: 4px;
+  font-size: clamp(14px, 1.5vw, 16px);
+  border-radius: 8px;
   font-family: inherit;
   color: #222;
+  line-height: 1.5;
+  transition: border-color 0.3s ease;
 }
 
 #loading {
   display: none;
   text-align: center;
   color: #666;
-  margin-bottom: 10px;
+  margin: clamp(8px, 2vw, 12px) 0;
   font-style: italic;
-  font-size: 12px;
+  font-size: clamp(12px, 1.2vw, 14px);
   flex-shrink: 0;
+  opacity: 0.8;
 }
 
 #highlightedText {
   white-space: pre-wrap;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: clamp(8px, 2vw, 12px);
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
   background: #f9f9f9;
-  min-height: 100px;
-  margin-bottom: 10px;
+  min-height: clamp(100px, 20vh, 160px);
+  margin-bottom: clamp(10px, 2vw, 15px);
   font-family: inherit;
   color: #222;
   overflow-y: auto;
-  font-size: 14px;
+  font-size: clamp(14px, 1.5vw, 16px);
+  line-height: 1.5;
+  transition: border-color 0.3s ease;
 }
 
 .highlight {
@@ -168,7 +195,6 @@ button#resetBtn:focus {
   100% { background-color: #ffea00; }
 }
 
-/* Responsive tweaks for very small mobile screens */
 @media (max-width: 400px) {
   #container {
     padding: 8px;
@@ -195,11 +221,13 @@ button#resetBtn:focus {
   </style>
 <body>
   <div id="container" role="main">
-    <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Brainly_logo.svg/1920px-Brainly_logo.svg.png" alt="Brainly Logo">
+    <img id="logo" src="https://styleguide.brainly.com/images/logos/brainly-0eeb28be95.svg" alt="Brainly Logo">
     <h1 id="heading">Ban Word Checker</h1>
     <textarea id="inputText" placeholder="Type or paste your text here..." aria-label="Input paragraph to check for banned words"></textarea>
-    <button id="checkBtn" onclick="checkBanWords()" aria-label="Check banned words in the paragraph">Check Banned Words</button>
-    <button id="resetBtn" class="btn-gray" onclick="resetFields()" aria-label="Reset input and output">Reset</button>
+    <div class="button-container">
+      <button id="checkBtn" onclick="checkBanWords()" aria-label="Check banned words in the paragraph">Check Banned Words</button>
+      <button id="resetBtn" class="btn-gray" onclick="resetFields()" aria-label="Reset input and output">Reset</button>
+    </div>
     <div id="output" aria-live="polite">Detected words will appear here.</div>
     <div id="highlightedText" aria-live="polite" aria-atomic="true"></div>
     <div id="loading" aria-live="polite" role="status">Checking...</div>
