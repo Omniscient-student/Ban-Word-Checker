@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ban Checker Pro</title>
+    <title>Ban Checker</title>
     <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/ModSefton/BanChecker/refs/heads/main/brainly_logo.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -46,14 +46,19 @@
         }
 
         #logo {
-            width: 80px;
-            margin-bottom: 1rem;
+            width: 110px;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            object-fit: contain;
         }
 
         #heading {
             font-size: 1.75rem;
             font-weight: 700;
-            color: var(--text-main);
+            color: var(--primary);
             margin: 0;
         }
 
@@ -166,8 +171,7 @@
 <div id="container">
     <header>
         <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Brainly_logo.svg/1920px-Brainly_logo.svg.png" alt="Logo">
-        <h1 id="heading">Content Guard</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Scan text for blacklisted phrases</p>
+        <h1 id="heading">Ban Checker</h1>
     </header>
 
     <div class="input-group">
@@ -1553,7 +1557,6 @@
             return;
         }
 
-        // UI feedback: Start Loading
         btn.disabled = true;
         const originalBtnText = btn.innerText;
         btn.innerText = "Analyzing...";
@@ -1576,7 +1579,6 @@
                 if (match.index === regex.lastIndex) regex.lastIndex++;
             }
 
-            // End Loading
             btn.disabled = false;
             btn.innerText = originalBtnText;
 
@@ -1620,4 +1622,3 @@
 
 </body>
 </html>
-
