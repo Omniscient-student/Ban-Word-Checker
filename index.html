@@ -1,211 +1,193 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ban Checker</title> 
-  <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/ModSefton/BanChecker/refs/heads/main/brainly_logo.svg">
-  <base target="_top">
-  <style>
-html, body {
-  background-color: #f8f9fa; 
-  font-family: 'Poppins', Arial, sans-serif; 
-  margin: 0;
-  padding: 10px;
-  height: 100%;
-  width: 100%;
-  color: #333;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ban Checker Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+        }
 
-#container {
-  background-color: #fff; 
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1); 
-  border-radius: 10px;
-  padding: 20px 25px 25px;
-  max-width: 600px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-}
+        body {
+            background-color: var(--bg);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
 
-#heading {
-  font-family: 'Poppins', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 1.8em;
-  color: #3399ff; 
-  text-align: center;
-  margin-bottom: 20px;
-}
+        #container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            margin: 20px;
+        }
 
-#logo {
-  width: 100px;
-  margin: 0 auto 12px;
-  flex-shrink: 0;
-}
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
 
-textarea {
-  resize: vertical;
-  flex-grow: 1;
-  width: 100%;
-  font-size: 13px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  margin-bottom: 8px;
-  min-height: 100px;
-  max-height: 160px;
-  overflow-y: auto;
-  font-family: inherit;
-}
+        #logo {
+            width: 80px;
+            margin-bottom: 1rem;
+        }
 
-button#checkBtn {
-  align-self: center;
-  min-width: 140px;
-  max-width: 180px;
-  width: 100%;
-  background-color: #3399ff;
-  color: white;
-  font-weight: bold;
-  padding: 8px 0;
-  border-radius: 5px;
-  margin-bottom: 12px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  outline-offset: 2px;
-  text-align: center;
-}
+        #heading {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+        }
 
-button#resetBtn {
-  align-self: center;
-  min-width: 90px;
-  max-width: 120px;
-  width: 100%;
-  background-color: #6c757d;
-  color: white;
-  font-weight: bold;
-  padding: 8px 0;
-  border-radius: 5px;
-  margin-bottom: 12px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  outline-offset: 2px;
-  text-align: center;
-}
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
 
-button#checkBtn:hover,
-button#checkBtn:focus {
-  background-color: #267acc;
-  transform: scale(1.05);
-}
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
 
-button#resetBtn:hover,
-button#resetBtn:focus {
-  background-color: #5a6268;
-  transform: scale(1.05);
-}
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
 
-#output {
-  flex-shrink: 0;
-  min-height: 30px;
-  max-height: 80px;
-  width: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  white-space: pre-wrap;
-  overflow-y: auto;
-  font-size: 13px;
-  border-radius: 4px;
-  font-family: inherit;
-  color: #222;
-}
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
 
-#loading {
-  display: none;
-  text-align: center;
-  color: #666;
-  margin-bottom: 10px;
-  font-style: italic;
-  font-size: 12px;
-  flex-shrink: 0;
-}
+        .button-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
 
-#highlightedText {
-  white-space: pre-wrap;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #f9f9f9;
-  min-height: 100px;
-  margin-bottom: 10px;
-  font-family: inherit;
-  color: #222;
-  overflow-y: auto;
-  font-size: 14px;
-}
+        button {
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 1rem;
+        }
 
-.highlight {
-  background-color: #ffea00;
-  color: #b70000;
-  font-weight: bold;
-  border-radius: 3px;
-  padding: 0 2px;
-  transition: background-color 0.5s ease;
-  animation: highlightPulse 1s ease forwards;
-}
+        #checkBtn {
+            background-color: var(--primary);
+            color: white;
+            position: relative;
+        }
 
-@keyframes highlightPulse {
-  0% { background-color: #ffea00; }
-  50% { background-color: #fff176; }
-  100% { background-color: #ffea00; }
-}
+        #checkBtn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
 
-@media (max-width: 400px) {
-  #container {
-    padding: 8px;
-  }
-  textarea {
-    font-size: 14px;
-    min-height: 100px;
-    max-height: 200px;
-  }
-  button {
-    font-size: 14px;
-    padding: 8px 14px;
-  }
-  #output {
-    font-size: 13px;
-    min-height: 35px;
-    max-height: 90px;
-  }
-  #highlightedText {
-    font-size: 14px;
-    min-height: 100px;
-  }
-}
-  </style>
+        #checkBtn:disabled {
+            background-color: #93c5fd;
+            cursor: not-allowed;
+        }
+
+        #resetBtn {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+        }
+
+        #resetBtn:hover {
+            background-color: var(--bg);
+            color: var(--text-main);
+        }
+
+        #output {
+            padding: 1rem;
+            border-radius: 12px;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        #highlightedText {
+            padding: 1rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            min-height: 100px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-bottom: 2px solid #f87171;
+        }
+    </style>
+</head>
 <body>
-  <div id="container" role="main">
-    <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Brainly_logo.svg/1920px-Brainly_logo.svg.png" alt="Brainly Logo">
-    <h1 id="heading">Ban Checker</h1>
-    <textarea id="inputText" placeholder="Type or paste your text here..." aria-label="Input paragraph to check for banned words"></textarea>
-    <button id="checkBtn" onclick="checkBanWords()" aria-label="Check banned words in the paragraph">Check Banned Words</button>
-    <button id="resetBtn" class="btn-gray" onclick="resetFields()" aria-label="Reset input and output">Reset</button>
-    <div id="output" aria-live="polite">Detected words will appear here.</div>
-    <div id="highlightedText" aria-live="polite" aria-atomic="true"></div>
-    <div id="loading" aria-live="polite" role="status">Checking...</div>
-  </div>
-  <script>
+
+<div id="container">
+    <header>
+        <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Brainly_logo.svg/1920px-Brainly_logo.svg.png" alt="Logo">
+        <h1 id="heading">Content Guard</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Scan text for blacklisted phrases</p>
+    </header>
+
+    <div class="input-group">
+        <label for="inputText">YOUR TEXT</label>
+        <textarea id="inputText" placeholder="Paste content to scan..."></textarea>
+    </div>
+
+    <div class="button-row">
+        <button id="checkBtn" onclick="checkBanWords()">Analyze Content</button>
+        <button id="resetBtn" onclick="resetFields()">Clear All</button>
+    </div>
+
+    <div id="output">Results will appear here.</div>
+    
+    <label>PREVIEW</label>
+    <div id="highlightedText"></div>
+</div>
+
+<script>
     const bannedWords = [
-    "niga",
+            "niga",
     "nigga",
     "niggers",
     "ꓠꓲꓖꓖꓰꓣꓢ",
@@ -1554,82 +1536,86 @@ button#resetBtn:focus {
     ];
 
     function escapeHTML(str) {
-      return str.replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#39;");
+        const p = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+        return str.replace(/[&<>"']/g, s => p[s]);
     }
 
     function checkBanWords() {
-      const text = document.getElementById('inputText').value;
-      const output = document.getElementById('output');
-      const loading = document.getElementById('loading');
-      const btn = document.getElementById('checkBtn');
-      const highlightedDiv = document.getElementById('highlightedText');
+        const text = document.getElementById('inputText').value;
+        const output = document.getElementById('output');
+        const btn = document.getElementById('checkBtn');
+        const highlightedDiv = document.getElementById('highlightedText');
 
-      if (!text.trim()) {
-        output.textContent = "Please enter some text.";
+        if (!text.trim()) {
+            output.innerHTML = '<span style="color: #666;">Please enter some text to scan.</span>';
+            highlightedDiv.innerHTML = '';
+            return;
+        }
+
+        // UI feedback: Start Loading
+        btn.disabled = true;
+        const originalBtnText = btn.innerText;
+        btn.innerText = "Analyzing...";
+        output.innerHTML = '<span style="color: var(--primary);">Scanning database...</span>';
         highlightedDiv.innerHTML = '';
-        return;
-      }
 
-      loading.style.display = 'block';
-      btn.disabled = true;
-      output.textContent = '';
-      highlightedDiv.innerHTML = '';
+        setTimeout(() => {
+            const escapedWords = bannedWords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+            const pattern = escapedWords.join('|');
+            const regex = new RegExp(pattern, 'gi');
 
-      const escapedWords = bannedWords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-      const pattern = escapedWords.join('|');
-      const regex = new RegExp(pattern, 'gi');
+            let match;
+            const highlights = [];
+            while ((match = regex.exec(text)) !== null) {
+                highlights.push({
+                    word: match[0],
+                    index: match.index,
+                    length: match[0].length
+                });
+                if (match.index === regex.lastIndex) regex.lastIndex++;
+            }
 
-      let match;
-      const highlights = [];
-      while ((match = regex.exec(text)) !== null) {
-        highlights.push({
-          word: match[0],
-          index: match.index,
-          length: match[0].length
-        });
-        if (match.index === regex.lastIndex) regex.lastIndex++;
-      }
+            // End Loading
+            btn.disabled = false;
+            btn.innerText = originalBtnText;
 
-      loading.style.display = 'none';
-      btn.disabled = false;
+            if (highlights.length === 0) {
+                output.innerHTML = `
+                    <div style="background: #dcfce7; color: #166534; padding: 12px; border-radius: 8px; border: 1px solid #bbf7d0;">
+                        <strong>✅ System Clear:</strong> No restricted words found.
+                    </div>`;
+                highlightedDiv.textContent = text;
+                return;
+            }
 
-      if (highlights.length === 0) {
-          output.textContent = "✅ No banned words found!";
-          output.style.color = "#5cb85c";
-          highlightedDiv.textContent = text;
-        return;
-      }
+            const uniqueWords = [...new Set(highlights.map(h => h.word.toLowerCase()))];
+            output.innerHTML = `
+                <div style="background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 8px; border: 1px solid #fecaca;">
+                    <strong>⚠️ Restricted Content:</strong> Found ${uniqueWords.length} unique banned terms:<br>
+                    <span style="font-size: 0.85rem; text-transform: uppercase; font-weight: bold;">${uniqueWords.join(", ")}</span>
+                </div>`;
 
-      const uniqueWords = [...new Set(highlights.map(h => h.word.toLowerCase()))];
-      output.innerHTML = "⚠️ Banned words found: <strong>" + uniqueWords.join(", ") + "</strong>";
-      output.style.color = "#d9534f";
-
-      let result = '';
-      let lastIndex = 0;
-      highlights.sort((a, b) => a.index - b.index);
-      highlights.forEach(({word, index, length}) => {
-        result += escapeHTML(text.substring(lastIndex, index));
-        result += '<span class="highlight">' + escapeHTML(text.substr(index, length)) + '</span>';
-        lastIndex = index + length;
-      });
-      result += escapeHTML(text.substring(lastIndex));
-      highlightedDiv.innerHTML = result;
+            let result = '';
+            let lastIndex = 0;
+            highlights.sort((a, b) => a.index - b.index);
+            
+            highlights.forEach(({word, index, length}) => {
+                result += escapeHTML(text.substring(lastIndex, index));
+                result += `<span class="highlight">${escapeHTML(text.substr(index, length))}</span>`;
+                lastIndex = index + length;
+            });
+            
+            result += escapeHTML(text.substring(lastIndex));
+            highlightedDiv.innerHTML = result;
+        }, 500); 
     }
 
     function resetFields() {
-      document.getElementById('inputText').value = '';
-      document.getElementById('output').innerHTML = "Detected words will appear here.";
-      document.getElementById('output').style.color = "#333";
-      document.getElementById('highlightedText').innerHTML = '';
+        document.getElementById('inputText').value = '';
+        document.getElementById('output').innerHTML = "Results will appear here.";
+        document.getElementById('highlightedText').innerHTML = '';
     }
-  </script>
+</script>
+
 </body>
 </html>
-
-
-
-
