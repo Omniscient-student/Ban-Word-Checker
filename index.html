@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ban Checker</title>
     <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/ModSefton/BanChecker/refs/heads/main/brainly_logo.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -23,9 +23,10 @@
             background-color: var(--bg);
             font-family: 'Inter', sans-serif;
             margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
             color: var(--text-main);
         }
@@ -37,7 +38,9 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 700px;
-            margin: 20px;
+            margin: 15px;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
         }
 
         header {
@@ -154,8 +157,8 @@
             min-height: 100px;
             white-space: pre-wrap;
             line-height: 1.6;
-            max-height: 400px;
-            overflow-y: auto;
+            overflow-wrap: break-word;
+            word-break: break-all; 
         }
 
         .highlight {
@@ -166,6 +169,101 @@
             font-weight: 600;
             border-bottom: 2px solid #f87171;
         }
+
+        #fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, transform 0.2s;
+            z-index: 1000;
+        }
+
+        #fab:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        #symbolPanel {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 320px; 
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: none; /* Logic: Toggle this to 'flex' via JS */
+            flex-direction: column;
+            padding: 15px;
+            z-index: 1000;
+            border: 1px solid #e5e7eb;
+        }
+
+        #symbolSearch {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+        
+        .symbol-list {
+            max-height: 300px; 
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 8px;
+            padding-right: 5px;
+        }
+        
+        .symbol-item {
+            background: #f3f4f6;
+            padding: 10px 5px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .symbol-item:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        #toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        z-index: 2000;
+        display: none; /* Hidden by default */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+        .is-selected {
+            background-color: #22c55e !important;
+            color: white !important;
+        }
+
     </style>
 </head>
 <body>
@@ -192,9 +290,24 @@
     <div id="highlightedText"></div>
 </div>
 
+
+<div id="fab" onclick="toggleSymbols()">💡</div>
+
+<div id="symbolPanel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <label style="font-size: 11px; font-weight: bold; color: #666;">SYMBOL FINDER</label>
+        <button onclick="toggleSymbols()" style="background:none; border:none; cursor:pointer; color:#999;">✕</button>
+    </div>
+    
+    <input type="text" id="symbolSearch" placeholder="Type a letter (e.g., g)..." onkeyup="searchSymbols()">
+    <div id="toast">Copied to clipboard!</div>
+    <div class="symbol-list" id="symbolList">
+        </div>
+</div>
+
 <script>
     const bannedWords = [
-            "niga",
+    "niga",
     "nigga",
     "niggers",
     "ꓠꓲꓖꓖꓰꓣꓢ",
@@ -1620,8 +1733,82 @@
         document.getElementById('output').innerHTML = "Results will appear here.";
         document.getElementById('highlightedText').innerHTML = '';
     }
+
+    const symbolData = [
+        { char: 'A', symbols: ['À', 'Á', 'à', 'á', 'â'] },
+        { char: 'B', symbols: ['Ḃ', 'Ḅ', 'ḃ', 'ḅ', 'ḇ'] },
+        { char: 'C', symbols: ['Ç', 'Ć', 'ç', 'ć', 'č'] },
+        { char: 'D', symbols: ['Ď', 'Ḋ', 'ď', 'ḋ', 'đ'] },
+        { char: 'E', symbols: ['È', 'Ê', 'è', 'ê', 'ë'] },
+        { char: 'F', symbols: ['Ḟ', 'Ƒ', 'ḟ', 'ƒ', 'ﬀ'] },
+        { char: 'G', symbols: ['Ĝ', 'Ğ', 'ĝ', 'ğ', 'ġ'] },
+        { char: 'H', symbols: ['Ĥ', 'Ħ', 'ĥ', 'ħ', 'ȟ'] },
+        { char: 'I', symbols: ['Ì', 'Í', 'ì', 'í', 'î'] },
+        { char: 'J', symbols: ['Ĵ', 'ǰ', 'ĵ', 'ʝ', 'ǰ'] }, // J variants are limited in standard accents
+        { char: 'K', symbols: ['Ķ', 'Ǩ', 'ķ', 'ǩ', 'ƙ'] },
+        { char: 'L', symbols: ['Ĺ', 'Ľ', 'ĺ', 'ľ', 'ł'] },
+        { char: 'M', symbols: ['Ṁ', 'Ṃ', 'ṁ', 'ṃ', 'ɱ'] },
+        { char: 'N', symbols: ['Ñ', 'Ń', 'ñ', 'ń', 'ň'] },
+        { char: 'O', symbols: ['Ò', 'Ó', 'ò', 'ó', 'ô'] },
+        { char: 'P', symbols: ['Ṕ', 'Ṗ', 'ṕ', 'ṗ', 'ƥ'] },
+        { char: 'Q', symbols: ['Ɋ', 'ʠ', 'ƣ', 'ʠ', 'ɋ'] }, // Q has very few accented forms
+        { char: 'R', symbols: ['Ŕ', 'Ř', 'ŕ', 'ř', 'ŗ'] },
+        { char: 'S', symbols: ['Ś', 'Š', 'ś', 'š', 'ş'] },
+        { char: 'T', symbols: ['Ť', 'Ţ', 'ť', 'ţ', 'ț'] },
+        { char: 'U', symbols: ['Ù', 'Ú', 'ù', 'ú', 'û'] },
+        { char: 'V', symbols: ['Ṽ', 'Ṿ', 'ṽ', 'ṿ', 'ʋ'] },
+        { char: 'W', symbols: ['Ŵ', 'Ẁ', 'ŵ', 'ẁ', 'ẅ'] },
+        { char: 'X', symbols: ['Ẍ', 'Ẋ', 'ẍ', 'ẋ', 'х'] },
+        { char: 'Y', symbols: ['Ý', 'Ÿ', 'ý', 'ÿ', 'ŷ'] },
+        { char: 'Z', symbols: ['Ź', 'Ž', 'ź', 'ž', 'ż'] }
+    ];
+
+    function toggleSymbols() {
+        const panel = document.getElementById('symbolPanel');
+    if (panel.style.display === 'flex') {
+        panel.style.display = 'none';
+    } else {
+        panel.style.display = 'flex';
+        searchSymbols(); 
+    }
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.innerText = message;
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 2000);
+}
+
+function searchSymbols() {
+    const query = document.getElementById('symbolSearch').value.toLowerCase();
+    const list = document.getElementById('symbolList');
+    list.innerHTML = '';
+
+    symbolData.forEach(item => {
+        if (query === '' || item.char === query) {
+            item.symbols.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'symbol-item';
+                div.innerText = s;
+
+                div.onclick = (e) => {
+                    if (e.detail === 1) { 
+                        navigator.clipboard.writeText(s);
+                        showToast(`Copied "${s}"`);
+                    }
+                };
+
+                div.ondblclick = () => {
+                    div.classList.toggle('is-selected');
+                };
+
+                list.appendChild(div);
+            });
+        }
+    });
+}
 </script>
 
 </body>
 </html>
-
